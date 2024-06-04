@@ -191,6 +191,7 @@ namespace libCore
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
 		}
+
 	}
 
 	void EngineOpenGL::InitializeMainLoop()

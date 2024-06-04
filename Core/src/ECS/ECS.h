@@ -1,5 +1,5 @@
 #pragma once
-
+#include "entt.hpp"
 namespace libCore
 {
     struct Transform {
@@ -12,6 +12,11 @@ namespace libCore
               rotation(0.0f, 0.0f, 0.0f),
               scale(1.0f, 1.0f, 1.0f) {}
 
+        Transform(glm::vec3 _pos, glm::vec3 _rotation, glm::vec3 _scale)
+            : position(_pos),
+            rotation(_rotation),
+            scale(_scale) {}
+
         glm::mat4 getMatrix() const {
             glm::mat4 mat = glm::mat4(1.0f);
             mat = glm::translate(mat, position);
@@ -21,5 +26,25 @@ namespace libCore
             mat = glm::scale(mat, scale);
             return mat;
         }
+    };
+    struct ImportModelData;
+    struct Renderer {
+        Ref<ImportModelData> importModelData;
+        std::string NameFile;
+        std::string pathName;
+    };
+
+    struct MeshComponent {
+        //VAO, VBO 
+        std::vector<Ref<Mesh>> meshes;
+    };
+
+    struct MaterialComponent {
+        std::vector<Ref<Material>> materials;
+        /*  BaseColor
+          Specular
+         Metallic
+         Roughness
+         AmbientOcclusion*/
     };
 }

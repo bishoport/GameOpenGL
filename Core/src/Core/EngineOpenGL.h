@@ -6,11 +6,9 @@
 #include "../tools/ModelLoader.h"
 #include "../tools/PrimitivesHelper.h"
 #include "Light.hpp"
-
 namespace libCore
 {
     //class GuiLayer;
-
     class EngineOpenGL
     {
         using MainLoopFnc = std::function<void(Timestep)>;
