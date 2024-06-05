@@ -1,5 +1,4 @@
 #pragma once
-
 #include "../LibCoreHeaders.h"
 #include "../Timestep.h"
 #include "../tools/AssetsManager.h"

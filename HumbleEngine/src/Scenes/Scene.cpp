@@ -57,6 +57,8 @@ void Scene::Init()
 	GameMode::GetInstance().BeginPlay();
 }
 
+
+
 void Scene::Tick(float deltaTime)
 {
 	GameMode::GetInstance().PreRenderer();

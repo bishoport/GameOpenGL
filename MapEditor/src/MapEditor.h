@@ -2,7 +2,6 @@
 #include <tools/ModelLoader.h>
 #include <Timestep.h>
 
-
 class MapEditor
 {
 public:

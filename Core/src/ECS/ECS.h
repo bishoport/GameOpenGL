@@ -28,8 +28,10 @@ namespace libCore
         }
     };
     struct ImportModelData;
+    struct ModelContainer;
     struct Renderer {
         Ref<ImportModelData> importModelData;
+        Ref<ModelContainer> modelContainerData;
         std::string NameFile;
         std::string pathName;
     };

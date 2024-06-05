@@ -1,20 +1,27 @@
 #pragma once
-#include "EntityManager.hpp"
 #include "Systems/RenderSystem.h"
 
-class Scene {
+#include "EntityManager.hpp"
+
+class Scene : public Singleton<Scene> {
 private:
-	RenderSystem* systemRender;
+	RenderSystem systemRender;
 	entt::entity entityRobot;
 	entt::entity entityOperator;
 	entt::entity entitySecondOperator;
+	std::vector<Ref<libCore::ModelContainer>> modelsInScene;
+
 public:
 	void BeginPlay();
 
 	void Tick(float DeltaTime);
 
-	//Ref<libCore::ImportModelData> ModelData(entt::entity entity) {
-	//	return systemRender.PrepareGeometry(EntityManager::GetInstance().m_registry, entity);
-	//}
+	void TickEditor(float DeltaTime);
 
+	Ref<libCore::ImportModelData> ModelData(entt::entity entity) {
+		return systemRender.PrepareGeometryForImportModelData(EntityManager::GetInstance().m_registry, entity);
+	}
+	Ref<libCore::ModelContainer> ModelContainer(entt::entity entity) {
+		return systemRender.PrepareGeometryForModelContainer(EntityManager::GetInstance().m_registry, entity);
+	}
 };

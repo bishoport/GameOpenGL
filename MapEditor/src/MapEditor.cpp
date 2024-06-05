@@ -65,7 +65,7 @@ void MapEditor::Init()
     //modelsInScene.push_back(libCore::EngineOpenGL::GetInstance().CreatePrefabCube());
 
 
-    modelsInScene.push_back(libCore::EngineOpenGL::GetInstance().CreateRoof());
+  //  modelsInScene.push_back(libCore::EngineOpenGL::GetInstance().CreateRoof());
 
 
 
@@ -86,12 +86,12 @@ void MapEditor::Init()
 
 void MapEditor::LoopOpenGL(libCore::Timestep deltaTime)
 {
-    libCore::EngineOpenGL::GetInstance().RenderViewports(modelsInScene); 
+   // libCore::EngineOpenGL::GetInstance().RenderViewports(modelsInScene); 
 }
 
 void MapEditor::LoopImGUI()
 {
-    libCore::EngineOpenGL::GetInstance().DrawHierarchyPanel(modelsInScene);
+   // libCore::EngineOpenGL::GetInstance().DrawHierarchyPanel(modelsInScene);
 }
 
 void MapEditor::OnCloseOpenGL()

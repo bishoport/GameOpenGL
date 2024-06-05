@@ -3,6 +3,7 @@
 
 #include "GuiLayer.h"
 #include "ViewportManager.hpp"
+#include "../ECS/Scene.h"
 
 namespace libCore
 {
@@ -191,12 +192,12 @@ namespace libCore
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
 		}
-
 	}
 
 	void EngineOpenGL::InitializeMainLoop()
 	{
 		Timestep lastFrameTime = glfwGetTime();
+		Scene::GetInstance().BeginPlay();
 
 		running = true;
 
@@ -223,6 +224,7 @@ namespace libCore
 			//MAIN LOOP FUNCTION CALL
 			if (g_mainLoodFnc)
 			{
+				Scene::GetInstance().Tick(m_deltaTime);
 				g_mainLoodFnc(m_deltaTime);
 			}
 			// -------------------------------------------
@@ -238,6 +240,7 @@ namespace libCore
 
 				if (g_imGUILoopFnc)
 				{
+					Scene::GetInstance().TickEditor(m_deltaTime);
 					g_imGUILoopFnc();
 				}
 
