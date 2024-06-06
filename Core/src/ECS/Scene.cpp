@@ -1,31 +1,35 @@
 #include "Scene.h"
 #include "../Core/EngineOpenGL.h"
 
+entt::entity Scene::EntityCreator(Ref<libCore::ModelContainer> modelContainer)
+{
+	entt::entity entity = EntityManager::GetInstance().m_registry.create();
+	EntityManager::GetInstance().m_registry.emplace<libCore::Renderer>(entity, modelContainer);
+	modelsInScene.push_back(modelContainer);
+	entitiesDictionary.emplace(entitiesDictionary.size() + 1, entity);
+	return entity;
+}
+
 void Scene::BeginPlay()
 {
-	//Ref<libCore::ImportModelData> importModelData;
-	//entityRobot = EntityManager::GetInstance().m_registry.create();
-	//EntityManager::GetInstance().m_registry.emplace<libCore::Renderer>(entityRobot, importModelData, "Robot.fbx", "assets/models/Robot/");
-	////modelsInScene.emplace(EntityManager::GetInstance().m_registry.get<libCore::Renderer>(entityRobot).importModelData);
-	//entityOperator = EntityManager::GetInstance().m_registry.create();
-	//EntityManager::GetInstance().m_registry.emplace<libCore::Renderer>(entityOperator, importModelData, "robot_operator.fbx", "assets/models/Robot/");
-	//entitySecondOperator = EntityManager::GetInstance().m_registry.create();
-	//EntityManager::GetInstance().m_registry.emplace<libCore::Renderer>(entitySecondOperator, importModelData, "robot_operator.fbx", "assets/models/Robot/");
-	
-	modelsInScene.push_back(libCore::EngineOpenGL::GetInstance().CreateRoof());
+	//Ref<libCore::ModelContainer> roof = libCore::EngineOpenGL::GetInstance().CreateRoof();
+
+	/*modelsInScene.push_back(libCore::EngineOpenGL::GetInstance().CreateRoof());
 	modelsInScene.push_back(libCore::EngineOpenGL::GetInstance().CreateRoof());
 
-	modelsInScene.push_back(libCore::EngineOpenGL::GetInstance().CreateRoof());
+	modelsInScene.push_back(libCore::EngineOpenGL::GetInstance().CreateRoof());*/
+	/*EntityCreator(libCore::EngineOpenGL::GetInstance().CreateRoof());
+	EntityCreator(libCore::EngineOpenGL::GetInstance().CreateRoof());
+	EntityCreator(libCore::EngineOpenGL::GetInstance().CreateRoof());*/
+
+	EntityCreator(libCore::EngineOpenGL::GetInstance().CreateRoof());
+	EntityCreator(libCore::EngineOpenGL::GetInstance().CreateRoof());
+	EntityCreator(libCore::EngineOpenGL::GetInstance().CreateRoof());
 
 }
 
 void Scene::Tick(float DeltaTime)
 {
-	libCore::EngineOpenGL::GetInstance().RenderViewports(modelsInScene);
 }
 
-void Scene::TickEditor(float DeltaTime)
-{
-	libCore::EngineOpenGL::GetInstance().DrawHierarchyPanel(modelsInScene);
 
-}

@@ -3,7 +3,6 @@
 
 #include "GuiLayer.h"
 #include "ViewportManager.hpp"
-#include "../ECS/Scene.h"
 
 namespace libCore
 {
@@ -240,7 +239,6 @@ namespace libCore
 
 				if (g_imGUILoopFnc)
 				{
-					Scene::GetInstance().TickEditor(m_deltaTime);
 					g_imGUILoopFnc();
 				}
 

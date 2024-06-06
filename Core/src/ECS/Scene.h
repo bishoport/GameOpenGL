@@ -6,17 +6,20 @@
 class Scene : public Singleton<Scene> {
 private:
 	RenderSystem systemRender;
-	entt::entity entityRobot;
-	entt::entity entityOperator;
-	entt::entity entitySecondOperator;
-	std::vector<Ref<libCore::ModelContainer>> modelsInScene;
+	
+	entt::entity EntityCreator(Ref<libCore::ModelContainer> modelContainer);
 
 public:
+	std::vector<Ref<libCore::ModelContainer>> modelsInScene;
+	//Visible for the editor
+	std::map<int, entt::entity> entitiesDictionary;
+	//
+	//std::map<int, libCore::ModelContainer> modelsDictionary;
+
 	void BeginPlay();
 
 	void Tick(float DeltaTime);
 
-	void TickEditor(float DeltaTime);
 
 	Ref<libCore::ImportModelData> ModelData(entt::entity entity) {
 		return systemRender.PrepareGeometryForImportModelData(EntityManager::GetInstance().m_registry, entity);

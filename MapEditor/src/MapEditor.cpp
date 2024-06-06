@@ -86,12 +86,12 @@ void MapEditor::Init()
 
 void MapEditor::LoopOpenGL(libCore::Timestep deltaTime)
 {
-   // libCore::EngineOpenGL::GetInstance().RenderViewports(modelsInScene); 
+    libCore::EngineOpenGL::GetInstance().RenderViewports(Scene::GetInstance().modelsInScene); 
 }
 
 void MapEditor::LoopImGUI()
 {
-   // libCore::EngineOpenGL::GetInstance().DrawHierarchyPanel(modelsInScene);
+    libCore::EngineOpenGL::GetInstance().DrawHierarchyPanel(Scene::GetInstance().modelsInScene);
 }
 
 void MapEditor::OnCloseOpenGL()

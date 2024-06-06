@@ -27,6 +27,7 @@ namespace libCore
 
 	struct ModelContainer
 	{
+		int entityIdentifier;
 		std::string name;
 		std::vector<Ref<Model>> models;
 		bool skeletal = false;

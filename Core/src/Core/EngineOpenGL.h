@@ -5,6 +5,8 @@
 #include "../tools/ModelLoader.h"
 #include "../tools/PrimitivesHelper.h"
 #include "Light.hpp"
+#include "../ECS/Scene.h"
+
 namespace libCore
 {
     //class GuiLayer;
