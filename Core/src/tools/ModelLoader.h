@@ -37,8 +37,22 @@ namespace libCore
 			for (auto& model : models)
 			{
 				model->Draw(shader);
+				
 			}
 		}
+
+
+
+		void DrawBB(const std::string& shader, glm::mat4 bbCenter, std::vector<glm::vec3> lines) {
+
+			for (auto& model : models)
+			{
+				model->DrawBB(shader, bbCenter);
+
+			}
+		}
+
+		
 
 		Ref<Model> UnifyMeshes() {
 			auto unifiedModel = CreateRef<Model>();

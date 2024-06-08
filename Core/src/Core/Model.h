@@ -28,5 +28,8 @@ namespace libCore
 
         //--METHODS
         void Draw(const std::string& shader);
+
+        void DrawBB(const std::string& shader, glm::mat4 bbcenter);
+
     };
 }

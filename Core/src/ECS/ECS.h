@@ -66,4 +66,9 @@ namespace libCore
          Roughness
          AmbientOcclusion*/
     };
+
+    struct ColliderComponent {
+        glm::vec3 maxBound;
+        glm::vec3 minBound;
+    };
 }

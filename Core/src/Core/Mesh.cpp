@@ -151,24 +151,60 @@ namespace libCore
 
 	void Mesh::Draw()
 	{
-		VAO.Bind();
+			VAO.Bind();
 
-		if (drawLike == DRAW_GEOM_LIKE::DOT)
-		{
-			glPointSize(5.0f);
-			glDrawArrays(GL_POINTS, 0, 1);
-		}
-		else if (drawLike == DRAW_GEOM_LIKE::LINE)
-		{
-			glLineWidth(1.0f);
-			glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, 0);
-		}
-		else if (drawLike == DRAW_GEOM_LIKE::TRIANGLE)
-		{
-			glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-		}
+			if (drawLike == DRAW_GEOM_LIKE::DOT)
+			{
+				glPointSize(5.0f);
+				glDrawArrays(GL_POINTS, 0, 1);
+			}
+			else if (drawLike == DRAW_GEOM_LIKE::LINE)
+			{
+				glLineWidth(1.0f);
+				glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, 0);
+			}
+			else if (drawLike == DRAW_GEOM_LIKE::TRIANGLE)
+			{
+				glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+			}
+
+
+			VAO.Unbind();
 		
+	
+	}
+	void Mesh::BindBoundingBox(std::vector<glm::vec3> lines)
+	{
 
-		VAO.Unbind();
+		std::vector<Vertex> vertexes = convertCoordsToVertexMap(lines);
+
+		VBO VBO_BB(vertexes);
+		VBO_BB.Bind();
+		//glBufferData(GL_ARRAY_BUFFER, lines.size() * sizeof(glm::vec3), lines.data(), GL_STATIC_DRAW);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	/*	glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);*/
+
+		VBO_BB.Unbind();
+	}
+	void Mesh::DrawBoundingBox()
+	{
+		VAO_BB.Bind();
+		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+		VAO_BB.Unbind();
+	}
+	std::vector<Vertex> Mesh::convertCoordsToVertexMap(std::vector<glm::vec3> positions)
+	{
+		std::vector<Vertex> vertexConversor;
+
+		for (unsigned i = 0; i < positions.size(); i++) {
+			Vertex vert;
+			vert.position.x = positions[i].x;
+			vert.position.y = positions[i].y;
+			vert.position.z = positions[i].z;
+		}
+
+		return vertexConversor;
 	}
 }

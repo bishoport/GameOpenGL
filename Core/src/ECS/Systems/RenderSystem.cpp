@@ -25,7 +25,7 @@ Ref<libCore::ModelContainer> RenderSystem::PrepareGeometryForModelContainer(entt
     return renderer.modelContainerData;
 }
 
-void RenderSystem::RendererBox(Ref<libCore::ModelContainer> modelContainer, glm::mat4 model, glm::mat4 camView)
+void RenderSystem::RendererBox(Ref<libCore::ModelContainer> modelContainer, glm::mat4 model, glm::mat4 camView, glm::vec3 position)
 {
 	glm::vec3 boundingBoxMin = glm::vec3(std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
 	glm::vec3 boundingBoxMax = glm::vec3(-std::numeric_limits<float>::max(), -std::numeric_limits<float>::max(), -std::numeric_limits<float>::max());
@@ -54,6 +54,13 @@ void RenderSystem::RendererBox(Ref<libCore::ModelContainer> modelContainer, glm:
 
 	std::vector<glm::vec3> lines = GenerateBoundingBoxLines(boundingBoxMin, boundingBoxMax);
 
+	glm::vec3 newPos = obtainCenter(boundingBoxMax, boundingBoxMin);
+	glm::mat4 bb_matrix = glm::mat4(1.0);
+	bb_matrix = glm::translate(bb_matrix, position);
+
+
+	modelContainer->DrawBB("Gizmos", bb_matrix, lines);
+
 }
 
 std::vector<glm::vec3> RenderSystem::GenerateBoundingBoxLines(const glm::vec3& minBounds, const glm::vec3& maxBounds)
@@ -80,5 +87,15 @@ std::vector<glm::vec3> RenderSystem::GenerateBoundingBoxLines(const glm::vec3& m
 
 		return lines;
 	}
+}
+
+glm::vec3 RenderSystem::obtainCenter(const glm::vec3& max, const glm::vec3& min)
+{
+	glm::vec3 center;
+	center.x = (max.x + min.x) / 2.0f;
+	center.y = (max.y + min.y) / 2.0f;
+	center.z = (max.z + min.z) / 2.0f;
+
+	return center;
 }
 

@@ -1,7 +1,9 @@
 #pragma once
 
 #include "../LibCoreHeaders.h"
+#include "../tools/PrimitivesHelper.h"
 #include "../ECS/ECS.h"
+#include "Mesh.h"
 
 namespace libCore
 {
