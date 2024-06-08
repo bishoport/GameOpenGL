@@ -402,6 +402,9 @@ namespace libCore
 		// Dibujar los modelos en la escena
 		for (auto& modelContainer : modelsInScene) {
 			modelContainer->Draw("shaderGeometryPass");
+			if (modelContainer->isBoundingBox) {
+
+			}
 		}
 
 		// Desligar el GBuffer

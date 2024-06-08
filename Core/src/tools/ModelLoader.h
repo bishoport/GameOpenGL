@@ -31,7 +31,7 @@ namespace libCore
 		std::string name;
 		std::vector<Ref<Model>> models;
 		bool skeletal = false;
-
+		bool isBoundingBox;
 		void Draw(const std::string& shader)
 		{
 			for (auto& model : models)

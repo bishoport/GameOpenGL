@@ -178,24 +178,59 @@ namespace libCore
     void GuiLayer::DrawHierarchyPanel(const std::vector<Ref<libCore::ModelContainer>>& modelsInScene)
     {
         ImGui::Begin("Hierarchy");
-        for (auto& modelContainer : modelsInScene) {
+        //for (auto& modelContainer : modelsInScene) {
 
-            if (ImGui::TreeNode(modelContainer.get(), "Model: %s", modelContainer->name.c_str())) {
-                for (int j = 0; j < modelContainer->models.size(); j++) {
-                    if (ImGui::TreeNode(modelContainer->models[j].get(), "Child: %d", j)) {
-                        // Aqu� listamos las Meshes de cada Model
-                        auto& model = modelContainer->models[j];
-                        for (int k = 0; k < model->meshes.size(); k++) {
-                            ImGui::BulletText("Mesh: %s", model->meshes[k]->meshName.c_str());
-                            ImGui::BulletText("Transform:");
-                            ImGui::DragFloat3("Position", &model->transform.position[0], 0.1f);
-                            ImGui::DragFloat3("Rotation", &model->transform.rotation[0], 0.01f, -3.14159f, 3.14159f, "%.3f rad");
-                            ImGui::DragFloat3("Scale", &model->transform.scale[0], 0.1f, 0.01f, 100.0f, "%.3f");
+        //    if (ImGui::TreeNode(modelContainer.get(), "Model: %s", modelContainer->name.c_str())) {
+        //        for (int j = 0; j < modelContainer->models.size(); j++) {
+        //            if (ImGui::TreeNode(modelContainer->models[j].get(), "Child: %d", j)) {
+        //                // Aqu� listamos las Meshes de cada Model
+        //                auto& model = modelContainer->models[j];
+        //                for (int k = 0; k < model->meshes.size(); k++) {
+        //                    ImGui::BulletText("Mesh: %s", model->meshes[k]->meshName.c_str());
+        //                    ImGui::BulletText("Transform:");
+        //                    ImGui::DragFloat3("Position", &model->transform.position[0], 0.1f);
+        //                    ImGui::DragFloat3("Rotation", &model->transform.rotation[0], 0.01f, -3.14159f, 3.14159f, "%.3f rad");
+        //                    ImGui::DragFloat3("Scale", &model->transform.scale[0], 0.1f, 0.01f, 100.0f, "%.3f");
+        //                }
+        //                ImGui::TreePop(); // Finaliza el nodo del Model
+        //            }
+        //        }
+        //        ImGui::TreePop(); // Finaliza el nodo del ModelContainer
+        //    }
+        //}
+
+       for (auto& modelContainer : modelsInScene) {
+
+           entt::entity newEntity = Scene::GetInstance().entitiesDictionary[modelContainer->entityIdentifier];
+           std::string nameEntity = EntityManager::GetInstance().m_registry.get<libCore::ConfigComp>(newEntity).name;
+
+            if (ImGui::TreeNode(&newEntity, nameEntity.c_str())) {
+                if (EntityManager::GetInstance().m_registry.has<Transform>(newEntity)) {
+                    for (int j = 0; j < modelContainer->models.size(); j++) {
+                        if (ImGui::TreeNode(modelContainer->models[j].get(), "Child: %d", j)) {
+                            // Aqu� listamos las Meshes de cada Model
+                            auto& model = modelContainer->models[j];
+                            for (int k = 0; k < model->meshes.size(); k++) {
+                                ImGui::BulletText("Mesh: %s", model->meshes[k]->meshName.c_str());
+                                ImGui::BulletText("Transform:");
+                                ImGui::DragFloat3("Position", &model->transform.position[0], 0.1f);
+                                ImGui::DragFloat3("Rotation", &model->transform.rotation[0], 0.01f, -3.14159f, 3.14159f, "%.3f rad");
+                                ImGui::DragFloat3("Scale", &model->transform.scale[0], 0.1f, 0.01f, 100.0f, "%.3f");
+                            }
+                            ImGui::TreePop(); // Finaliza el nodo del Model
                         }
-                        ImGui::TreePop(); // Finaliza el nodo del Model
+                    }
+                }
+
+                if (EntityManager::GetInstance().m_registry.has<libCore::Renderer>(newEntity)) {
+                    if (ImGui::TreeNode(&EntityManager::GetInstance().m_registry.get<libCore::Renderer>(newEntity), "Renderer"))
+                    {
+                        ImGui::BulletText("TESTING");
+                        ImGui::TreePop();
                     }
                 }
                 ImGui::TreePop(); // Finaliza el nodo del ModelContainer
+
             }
         }
         ImGui::End();

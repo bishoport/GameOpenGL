@@ -7,7 +7,7 @@ class Scene : public Singleton<Scene> {
 private:
 	RenderSystem systemRender;
 	
-	entt::entity EntityCreator(Ref<libCore::ModelContainer> modelContainer);
+	entt::entity EntityCreator(Ref<libCore::ModelContainer> modelContainer, std::string nameEntity = "");
 
 public:
 	std::vector<Ref<libCore::ModelContainer>> modelsInScene;

@@ -2,7 +2,12 @@
 #include "entt.hpp"
 namespace libCore
 {
+    struct ConfigComp {
+        std::string name;
+    };
+
     struct Transform {
+        std::string name;
         glm::vec3 position;
         glm::vec3 rotation; // En radianes
         glm::vec3 scale;
@@ -10,12 +15,16 @@ namespace libCore
         Transform()
             : position(0.0f, 0.0f, 0.0f),
               rotation(0.0f, 0.0f, 0.0f),
-              scale(1.0f, 1.0f, 1.0f) {}
+              scale(1.0f, 1.0f, 1.0f) {
+        }
 
         Transform(glm::vec3 _pos, glm::vec3 _rotation, glm::vec3 _scale)
             : position(_pos),
             rotation(_rotation),
-            scale(_scale) {}
+            scale(_scale)
+        {
+        
+        }
 
         glm::mat4 getMatrix() const {
             glm::mat4 mat = glm::mat4(1.0f);
@@ -35,6 +44,7 @@ namespace libCore
 
         }
         Renderer(Ref<ModelContainer> model) {
+
             modelContainerData = model;
         }
         Ref<ImportModelData> importModelData;
