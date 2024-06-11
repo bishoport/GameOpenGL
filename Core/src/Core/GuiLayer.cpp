@@ -57,6 +57,11 @@ namespace libCore
         //ImGui_ImplOpenGL3_CreateFontsTexture();
     }
 
+    void libCore::GuiLayer::SetCallBackFunc(CallbackFromGuiLayer callbackFromGuiLayerFunc)
+    {
+        m_callbackFromGuiLayerFunc = callbackFromGuiLayerFunc;
+    }
+
     GuiLayer::~GuiLayer() {
         // Cleanup
         ImGui_ImplOpenGL3_Shutdown();
@@ -233,7 +238,337 @@ namespace libCore
     }
 
 
+    void GuiLayer::RenderCheckerMatrix() {
+        const int xAxis = 10;
+        const int yAxis = 10;
+        const float scale = 1.0;
 
+        static bool checkerMatrix[xAxis][yAxis] = { false }; // Matriz de checkboxes de 10x10
+        static bool holeMatrix[xAxis][yAxis] = { false };    // Matriz de checkboxes para los agujeros
+        static std::vector<Point> selectedPoints;     // Vector para almacenar los puntos seleccionados
+        static std::vector<Point> holePoints;         // Vector para almacenar los puntos de los agujeros
+        static std::vector<std::pair<int, int>> selectedOrder; // Para almacenar el orden de selección de celdas
+        static std::vector<std::pair<int, int>> holeOrder;     // Para almacenar el orden de selección de celdas para los agujeros
+
+        ImGui::Begin("Checker Matrix");
+
+        // Desplegable para la matriz de foot prints
+        if (ImGui::CollapsingHeader("Foot Prints Matrix", ImGuiTreeNodeFlags_DefaultOpen)) {
+            ImGui::Text("Foot Prints:");
+
+            // Generar la matriz de checkboxes
+            for (int row = 0; row < xAxis; ++row) {
+                for (int col = 0; col < yAxis; ++col) {
+                    ImGui::PushID(row * yAxis + col); // Asegurar identificadores únicos
+
+                    bool oldValue = checkerMatrix[row][col];
+                    if (ImGui::Checkbox("", &checkerMatrix[row][col])) {
+                        if (checkerMatrix[row][col]) {
+                            // Añadir celda a la lista de selección si se marca
+                            selectedOrder.emplace_back(row, col);
+                        }
+                        else {
+                            // Eliminar celda de la lista de selección si se desmarca
+                            auto it = std::remove(selectedOrder.begin(), selectedOrder.end(), std::make_pair(row, col));
+                            selectedOrder.erase(it, selectedOrder.end());
+                        }
+                    }
+                    ImGui::PopID();
+
+                    if (col < yAxis - 1) ImGui::SameLine(); // Mantener los checkboxes en la misma línea
+                }
+            }
+        }
+
+        // Desplegable para la matriz de holes
+        if (ImGui::CollapsingHeader("Holes Matrix", ImGuiTreeNodeFlags_DefaultOpen)) {
+            ImGui::Text("Holes:");
+
+            // Generar la matriz de checkboxes para los agujeros
+            for (int row = 0; row < xAxis; ++row) {
+                for (int col = 0; col < yAxis; ++col) {
+                    ImGui::PushID((row * yAxis + col) + (xAxis * yAxis)); // Asegurar identificadores únicos
+
+                    bool oldValue = holeMatrix[row][col];
+                    if (ImGui::Checkbox("", &holeMatrix[row][col])) {
+                        if (holeMatrix[row][col]) {
+                            // Añadir celda a la lista de selección si se marca
+                            holeOrder.emplace_back(row, col);
+                        }
+                        else {
+                            // Eliminar celda de la lista de selección si se desmarca
+                            auto it = std::remove(holeOrder.begin(), holeOrder.end(), std::make_pair(row, col));
+                            holeOrder.erase(it, holeOrder.end());
+                        }
+                    }
+                    ImGui::PopID();
+
+                    if (col < yAxis - 1) ImGui::SameLine(); // Mantener los checkboxes en la misma línea
+                }
+            }
+        }
+
+        // Botón para recoger los resultados
+        if (ImGui::Button("Generate Roof")) {
+            selectedPoints.clear(); // Limpiar el vector de puntos seleccionados
+            for (const auto& cell : selectedOrder) {
+                int row = cell.first;
+                int col = cell.second;
+                if (checkerMatrix[row][col]) {
+                    // Convertir la posición de la matriz en coordenadas (x, y)
+                    float x = static_cast<float>(col) * scale; // Dividir por scale para escalar
+                    float y = static_cast<float>(9 - row) * scale; // Invertir Y para que (0,0) esté en la parte inferior izquierda
+                    selectedPoints.push_back(Point{ x, y });
+                }
+            }
+
+            holePoints.clear(); // Limpiar el vector de puntos de los agujeros
+            for (const auto& cell : holeOrder) {
+                int row = cell.first;
+                int col = cell.second;
+                if (holeMatrix[row][col]) {
+                    // Convertir la posición de la matriz en coordenadas (x, y)
+                    float x = static_cast<float>(col) * scale; // Dividir por scale para escalar
+                    float y = static_cast<float>(9 - row) * scale; // Invertir Y para que (0,0) esté en la parte inferior izquierda
+                    holePoints.push_back(Point{ x, y });
+                }
+            }
+
+            // Llamar al callback con los puntos seleccionados
+            if (m_callbackFromGuiLayerFunc) {
+                std::vector<Vector2d> vector2dPoints;
+                std::vector<Vector2d> vector2dHolePoints;
+                for (const auto& point : selectedPoints) {
+                    vector2dPoints.push_back(Vector2d(point.x, point.y));
+                }
+                for (const auto& point : holePoints) {
+                    vector2dHolePoints.push_back(Vector2d(point.x, point.y));
+                }
+                m_callbackFromGuiLayerFunc(vector2dPoints, vector2dHolePoints);
+            }
+        }
+
+        // Botón para limpiar la matriz y la lista de puntos seleccionados
+        if (ImGui::Button("Clear")) {
+            selectedPoints.clear();
+            holePoints.clear();
+            selectedOrder.clear();
+            holeOrder.clear();
+            std::fill(&checkerMatrix[0][0], &checkerMatrix[0][0] + sizeof(checkerMatrix), false);
+            std::fill(&holeMatrix[0][0], &holeMatrix[0][0] + sizeof(holeMatrix), false);
+        }
+
+        // Mostrar los puntos seleccionados en el formato requerido con índice
+        ImGui::Text("Selected Points:");
+        for (size_t i = 0; i < selectedPoints.size(); ++i) {
+            const auto& point = selectedPoints[i];
+            ImGui::Text("%zu: { %.1f, %.1f },", i, point.x, point.y);
+        }
+
+        // Mostrar los puntos de los agujeros en el formato requerido con índice
+        ImGui::Text("Hole Points:");
+        for (size_t i = 0; i < holePoints.size(); ++i) {
+            const auto& point = holePoints[i];
+            ImGui::Text("%zu: { %.1f, %.1f },", i, point.x, point.y);
+        }
+
+        ImGui::End();
+    }
+
+
+
+
+
+
+    //void GuiLayer::RenderCheckerMatrix() {
+    //    const int xAxis = 11;
+    //    const int yAxis = 11;
+    //    const float scale = 1.0;
+
+    //    static bool checkerMatrix[xAxis][yAxis] = { false }; // Matriz de checkboxes de 10x10
+    //    static bool holeMatrix[xAxis][yAxis] = { false };    // Matriz de checkboxes para los agujeros
+    //    static std::vector<Point> selectedPoints;     // Vector para almacenar los puntos seleccionados
+    //    static std::vector<Point> holePoints;         // Vector para almacenar los puntos de los agujeros
+    //    static std::vector<std::pair<int, int>> selectedOrder; // Para almacenar el orden de selección de celdas
+    //    static std::vector<std::pair<int, int>> holeOrder;     // Para almacenar el orden de selección de celdas para los agujeros
+
+    //    // Vector de datos de tejados predefinidos
+    //    std::vector<RoofData> predefinedRoofs = {
+    //        // Añade aquí tus datos predefinidos de tejado
+    //        // Ejemplo:
+    //        {
+    //            {{ 0.0, 0.0 },
+    //             { 4.0, 0.0 },
+    //             { 4.0, 2.0 },
+    //             { 2.0, 2.0 },
+    //             { 2.0, 6.0 },
+    //             { 0.0, 6.0 }}, // polygon
+
+    //            {},                                   // hole
+    //            {},                                   // holes
+    //            {}                                    // expected
+    //        },
+    //        // Otros datos de tejado...
+    //    };
+
+    //    static int currentRoofIndex = 0;
+
+    //    ImGui::Begin("Checker Matrix");
+
+    //    // Selector de bases de tejado predefinidas
+    //    if (ImGui::Combo("Select Roof", &currentRoofIndex, "Roof 1\0Roof 2\0Roof 3\0")) {
+    //        // Cargar los datos seleccionados en las matrices
+    //        const RoofData& selectedRoof = predefinedRoofs[currentRoofIndex];
+    //        selectedOrder.clear();
+    //        holeOrder.clear();
+    //        std::fill(&checkerMatrix[0][0], &checkerMatrix[0][0] + sizeof(checkerMatrix), false);
+    //        std::fill(&holeMatrix[0][0], &holeMatrix[0][0] + sizeof(holeMatrix), false);
+
+    //        for (const auto& point : selectedRoof.polygon) {
+    //            int row = 9 - static_cast<int>(point.Y * scale);
+    //            int col = static_cast<int>(point.X * scale);
+    //            if (row >= 0 && row < xAxis && col >= 0 && col < yAxis) {
+    //                checkerMatrix[row][col] = true;
+    //                selectedOrder.emplace_back(row, col);
+    //            }
+    //        }
+
+    //        for (const auto& point : selectedRoof.hole) {
+    //            int row = 9 - static_cast<int>(point.Y * scale);
+    //            int col = static_cast<int>(point.X * scale);
+    //            if (row >= 0 && row < xAxis && col >= 0 && col < yAxis) {
+    //                holeMatrix[row][col] = true;
+    //                holeOrder.emplace_back(row, col);
+    //            }
+    //        }
+    //    }
+
+    //    // Desplegable para la matriz de foot prints
+    //    if (ImGui::CollapsingHeader("Foot Prints Matrix", ImGuiTreeNodeFlags_DefaultOpen)) {
+    //        ImGui::Text("Foot Prints:");
+
+    //        // Generar la matriz de checkboxes
+    //        for (int row = 0; row < xAxis; ++row) {
+    //            for (int col = 0; col < yAxis; ++col) {
+    //                ImGui::PushID(row * yAxis + col); // Asegurar identificadores únicos
+
+    //                bool oldValue = checkerMatrix[row][col];
+    //                if (ImGui::Checkbox("", &checkerMatrix[row][col])) {
+    //                    if (checkerMatrix[row][col]) {
+    //                        // Añadir celda a la lista de selección si se marca
+    //                        selectedOrder.emplace_back(row, col);
+    //                    }
+    //                    else {
+    //                        // Eliminar celda de la lista de selección si se desmarca
+    //                        auto it = std::remove(selectedOrder.begin(), selectedOrder.end(), std::make_pair(row, col));
+    //                        selectedOrder.erase(it, selectedOrder.end());
+    //                    }
+    //                }
+    //                ImGui::PopID();
+
+    //                if (col < yAxis - 1) ImGui::SameLine(); // Mantener los checkboxes en la misma línea
+    //            }
+    //        }
+    //    }
+
+    //    // Desplegable para la matriz de holes
+    //    if (ImGui::CollapsingHeader("Holes Matrix", ImGuiTreeNodeFlags_DefaultOpen)) {
+    //        ImGui::Text("Holes:");
+
+    //        // Generar la matriz de checkboxes para los agujeros
+    //        for (int row = 0; row < xAxis; ++row) {
+    //            for (int col = 0; col < yAxis; ++col) {
+    //                ImGui::PushID((row * yAxis + col) + (xAxis * yAxis)); // Asegurar identificadores únicos
+
+    //                bool oldValue = holeMatrix[row][col];
+    //                if (ImGui::Checkbox("", &holeMatrix[row][col])) {
+    //                    if (holeMatrix[row][col]) {
+    //                        // Añadir celda a la lista de selección si se marca
+    //                        holeOrder.emplace_back(row, col);
+    //                    }
+    //                    else {
+    //                        // Eliminar celda de la lista de selección si se desmarca
+    //                        auto it = std::remove(holeOrder.begin(), holeOrder.end(), std::make_pair(row, col));
+    //                        holeOrder.erase(it, holeOrder.end());
+    //                    }
+    //                }
+    //                ImGui::PopID();
+
+    //                if (col < yAxis - 1) ImGui::SameLine(); // Mantener los checkboxes en la misma línea
+    //            }
+    //        }
+    //    }
+
+    //    // Botón para recoger los resultados
+    //    if (ImGui::Button("Generate Roof")) {
+    //        selectedPoints.clear(); // Limpiar el vector de puntos seleccionados
+    //        for (const auto& cell : selectedOrder) {
+    //            int row = cell.first;
+    //            int col = cell.second;
+    //            if (checkerMatrix[row][col]) {
+    //                // Convertir la posición de la matriz en coordenadas (x, y)
+    //                float x = static_cast<float>(col) / scale; // Dividir por scale para escalar
+    //                float y = static_cast<float>(9 - row) / scale; // Invertir Y para que (0,0) esté en la parte inferior izquierda
+    //                selectedPoints.push_back(Point{ x, y });
+    //            }
+    //        }
+
+    //        holePoints.clear(); // Limpiar el vector de puntos de los agujeros
+    //        for (const auto& cell : holeOrder) {
+    //            int row = cell.first;
+    //            int col = cell.second;
+    //            if (holeMatrix[row][col]) {
+    //                // Convertir la posición de la matriz en coordenadas (x, y)
+    //                float x = static_cast<float>(col) / scale; // Dividir por scale para escalar
+    //                float y = static_cast<float>(9 - row) / scale; // Invertir Y para que (0,0) esté en la parte inferior izquierda
+    //                holePoints.push_back(Point{ x, y });
+    //            }
+    //        }
+
+    //        // Llamar al callback con los puntos seleccionados
+    //        if (m_callbackFromGuiLayerFunc) {
+    //            std::vector<Vector2d> vector2dPoints;
+    //            std::vector<Vector2d> vector2dHolePoints;
+    //            for (const auto& point : selectedPoints) {
+    //                vector2dPoints.push_back(Vector2d(point.x, point.y));
+    //            }
+    //            for (const auto& point : holePoints) {
+    //                vector2dHolePoints.push_back(Vector2d(point.x, point.y));
+    //            }
+    //            m_callbackFromGuiLayerFunc(vector2dPoints, vector2dHolePoints);
+    //        }
+    //    }
+
+    //    // Botón para limpiar la matriz y la lista de puntos seleccionados
+    //    if (ImGui::Button("Clear")) {
+    //        selectedPoints.clear();
+    //        holePoints.clear();
+    //        selectedOrder.clear();
+    //        holeOrder.clear();
+    //        std::fill(&checkerMatrix[0][0], &checkerMatrix[0][0] + sizeof(checkerMatrix), false);
+    //        std::fill(&holeMatrix[0][0], &holeMatrix[0][0] + sizeof(holeMatrix), false);
+    //    }
+
+    //    // Mostrar los puntos seleccionados en el formato requerido con índice
+    //    ImGui::Text("Selected Points:");
+    //    for (size_t i = 0; i < selectedPoints.size(); ++i) {
+    //        const auto& point = selectedPoints[i];
+    //        ImGui::Text("%zu: { %.1f, %.1f },", i, point.x, point.y);
+    //    }
+
+    //    // Mostrar los puntos de los agujeros en el formato requerido con índice
+    //    ImGui::Text("Hole Points:");
+    //    for (size_t i = 0; i < holePoints.size(); ++i) {
+    //        const auto& point = holePoints[i];
+    //        ImGui::Text("%zu: { %.1f, %.1f },", i, point.x, point.y);
+    //    }
+
+    //    ImGui::End();
+    //}
+
+
+    
+    
 
     void GuiLayer::end()
     {

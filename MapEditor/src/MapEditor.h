@@ -22,5 +22,5 @@ private:
     void OnCloseOpenGL();
 
 
-    std::vector<Ref<libCore::ModelContainer>> modelsInScene;
+    /*std::vector<Ref<libCore::ModelContainer>> modelsInScene;*/
 };

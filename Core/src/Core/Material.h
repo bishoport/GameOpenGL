@@ -20,7 +20,7 @@ namespace libCore
         Ref<Texture> albedoMap;
         Ref<Texture> normalMap;
         Ref<Texture> metallicMap;
-        Ref<Texture> rougnessMap;
+        Ref<Texture> roughnessMap;
         Ref<Texture> aOMap;
         //-------------------------------------------------------
     };

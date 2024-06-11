@@ -8,7 +8,12 @@ namespace libCore
 		//Bind Textures
 		for (unsigned int i = 0; i < materials.size(); i++)
 		{
+
+
 			materials[i]->albedoMap->Bind(shader);
+			libCore::ShaderManager::Get(shader)->setVec3("uniformColor", materials[i]->color);
+			
+
 			//materials[i]->normalMap->Bind(shader);
 			//materials[i]->metallicMap->Bind(shader);
 			//materials[i]->rougnessMap->Bind(shader);

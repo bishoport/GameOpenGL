@@ -43,6 +43,33 @@
     <ClInclude Include="src\input\MouseButtonCodes.h" />
     <ClInclude Include="src\LibCore.h" />
     <ClInclude Include="src\LibCoreHeaders.h" />
+    <ClInclude Include="src\StraightSkeleton\CircularList.h" />
+    <ClInclude Include="src\StraightSkeleton\CircularNode.h" />
+    <ClInclude Include="src\StraightSkeleton\EChainType.h" />
+    <ClInclude Include="src\StraightSkeleton\Edge.h" />
+    <ClInclude Include="src\StraightSkeleton\EdgeChain.h" />
+    <ClInclude Include="src\StraightSkeleton\EdgeEvent.h" />
+    <ClInclude Include="src\StraightSkeleton\EdgeResult.h" />
+    <ClInclude Include="src\StraightSkeleton\FaceNode.h" />
+    <ClInclude Include="src\StraightSkeleton\FaceQueue.h" />
+    <ClInclude Include="src\StraightSkeleton\FaceQueueUtil.h" />
+    <ClInclude Include="src\StraightSkeleton\IChain.h" />
+    <ClInclude Include="src\StraightSkeleton\LavUtil.h" />
+    <ClInclude Include="src\StraightSkeleton\LineLinear2d.h" />
+    <ClInclude Include="src\StraightSkeleton\LineParametric2d.h" />
+    <ClInclude Include="src\StraightSkeleton\MultiEdgeEvent.h" />
+    <ClInclude Include="src\StraightSkeleton\MultiSplitEvent.h" />
+    <ClInclude Include="src\StraightSkeleton\PickEvent.h" />
+    <ClInclude Include="src\StraightSkeleton\PrimitiveUtils.h" />
+    <ClInclude Include="src\StraightSkeleton\SingleEdgeChain.h" />
+    <ClInclude Include="src\StraightSkeleton\Skeleton.h" />
+    <ClInclude Include="src\StraightSkeleton\SkeletonBuilder.h" />
+    <ClInclude Include="src\StraightSkeleton\SkeletonEvent.h" />
+    <ClInclude Include="src\StraightSkeleton\SplitChain.h" />
+    <ClInclude Include="src\StraightSkeleton\SplitEvent.h" />
+    <ClInclude Include="src\StraightSkeleton\Vector2d.h" />
+    <ClInclude Include="src\StraightSkeleton\Vertex.h" />
+    <ClInclude Include="src\StraightSkeleton\VertexSplitEvent.h" />
     <ClInclude Include="src\Timestep.h" />
     <ClInclude Include="src\tools\AssetsManager.h" />
     <ClInclude Include="src\tools\AssimpGlmHelpers.h" />
@@ -52,11 +79,13 @@
     <ClInclude Include="src\tools\FreeTypeManager.h" />
     <ClInclude Include="src\tools\ModelLoader.h" />
     <ClInclude Include="src\tools\PrimitivesHelper.h" />
+    <ClInclude Include="src\tools\RoofGenerator.h" />
     <ClInclude Include="src\tools\RoofGenerator.hpp" />
     <ClInclude Include="src\tools\Shader.h" />
     <ClInclude Include="src\tools\ShaderManager.h" />
     <ClInclude Include="src\tools\SkeletalModelLoader.h" />
     <ClInclude Include="src\tools\TextureManager.h" />
+    <ClInclude Include="vendor\earcut\include\mapbox\earcut.hpp" />
     <ClInclude Include="vendor\ft\ft2build.h" />
     <ClInclude Include="vendor\imgui\imconfig.h" />
     <ClInclude Include="vendor\imgui\imgui.h" />
@@ -78,10 +107,38 @@
     <ClCompile Include="src\Core\VBO.cpp" />
     <ClCompile Include="src\Core\GuiLayer.cpp" />
     <ClCompile Include="src\input\InputManager.cpp" />
+    <ClCompile Include="src\StraightSkeleton\CircularList.cpp" />
+    <ClCompile Include="src\StraightSkeleton\CircularNode.cpp" />
+    <ClCompile Include="src\StraightSkeleton\EChainType.cpp" />
+    <ClCompile Include="src\StraightSkeleton\Edge.cpp" />
+    <ClCompile Include="src\StraightSkeleton\EdgeChain.cpp" />
+    <ClCompile Include="src\StraightSkeleton\EdgeEvent.cpp" />
+    <ClCompile Include="src\StraightSkeleton\EdgeResult.cpp" />
+    <ClCompile Include="src\StraightSkeleton\FaceNode.cpp" />
+    <ClCompile Include="src\StraightSkeleton\FaceQueue.cpp" />
+    <ClCompile Include="src\StraightSkeleton\FaceQueueUtil.cpp" />
+    <ClCompile Include="src\StraightSkeleton\IChain.cpp" />
+    <ClCompile Include="src\StraightSkeleton\LavUtil.cpp" />
+    <ClCompile Include="src\StraightSkeleton\LineLinear2d.cpp" />
+    <ClCompile Include="src\StraightSkeleton\LineParametric2d.cpp" />
+    <ClCompile Include="src\StraightSkeleton\MultiEdgeEvent.cpp" />
+    <ClCompile Include="src\StraightSkeleton\MultiSplitEvent.cpp" />
+    <ClCompile Include="src\StraightSkeleton\PickEvent.cpp" />
+    <ClCompile Include="src\StraightSkeleton\PrimitiveUtils.cpp" />
+    <ClCompile Include="src\StraightSkeleton\SingleEdgeChain.cpp" />
+    <ClCompile Include="src\StraightSkeleton\Skeleton.cpp" />
+    <ClCompile Include="src\StraightSkeleton\SkeletonBuilder.cpp" />
+    <ClCompile Include="src\StraightSkeleton\SkeletonEvent.cpp" />
+    <ClCompile Include="src\StraightSkeleton\SplitChain.cpp" />
+    <ClCompile Include="src\StraightSkeleton\SplitEvent.cpp" />
+    <ClCompile Include="src\StraightSkeleton\Vector2d.cpp" />
+    <ClCompile Include="src\StraightSkeleton\Vertex.cpp" />
+    <ClCompile Include="src\StraightSkeleton\VertexSplitEvent.cpp" />
     <ClCompile Include="src\tools\AssetsManager.cpp" />
     <ClCompile Include="src\tools\Camera.cpp" />
     <ClCompile Include="src\tools\ModelLoader.cpp" />
     <ClCompile Include="src\tools\PrimitivesHelper.cpp" />
+    <ClCompile Include="src\tools\RoofGenerator.cpp" />
     <ClCompile Include="src\tools\ShaderManager.cpp" />
     <ClCompile Include="src\tools\SkeletalModelLoader.cpp" />
     <ClCompile Include="src\tools\TextureManager.cpp" />
@@ -190,7 +247,7 @@
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)vendor;$(ProjectDir)vendor\imgui;$(ProjectDir)vendor\freetype-2.13.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)vendor\earcut\include;$(ProjectDir)vendor;$(ProjectDir)vendor\imgui;$(ProjectDir)vendor\freetype-2.13.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>

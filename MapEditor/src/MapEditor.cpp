@@ -37,18 +37,10 @@ void MapEditor::Init()
     //importModelData2.modelID = 1;
     //importModelData2.globalScaleFactor = 0.1f;
 
-    //libCore::ImportModelData importModelData3;
-    //importModelData3.filePath = "assets/models/cp/cyberpunk/";
-    //importModelData3.fileName = "c11retro.fbx";
-    //importModelData3.invertUV = false;
-    //importModelData3.rotate90 = false;
-    //importModelData3.useCustomTransform = true;
-    //importModelData3.modelID = 1;
-    //importModelData3.globalScaleFactor = 1.0f;
+
 
     //modelsInScene.push_back(libCore::ModelLoader::LoadModel(importModelData));
     //modelsInScene.push_back(libCore::ModelLoader::LoadModel(importModelData2));
-    //modelsInScene.push_back(libCore::ModelLoader::LoadModel(importModelData3));
 
 
     //Ejemplo de figura con puntos y lineas por separado
@@ -64,8 +56,8 @@ void MapEditor::Init()
 
     //modelsInScene.push_back(libCore::EngineOpenGL::GetInstance().CreatePrefabCube());
 
-
-    modelsInScene.push_back(libCore::EngineOpenGL::GetInstance().CreateRoof());
+                                                                                                                           
+    //libCore::EngineOpenGL::GetInstance().CreateRoof();
 
 
 
@@ -86,12 +78,17 @@ void MapEditor::Init()
 
 void MapEditor::LoopOpenGL(libCore::Timestep deltaTime)
 {
-    libCore::EngineOpenGL::GetInstance().RenderViewports(modelsInScene); 
+    libCore::EngineOpenGL::GetInstance().RenderViewports(); 
 }
+
+
+
+
+
 
 void MapEditor::LoopImGUI()
 {
-    libCore::EngineOpenGL::GetInstance().DrawHierarchyPanel(modelsInScene);
+    libCore::EngineOpenGL::GetInstance().DrawHierarchyPanel();
 }
 
 void MapEditor::OnCloseOpenGL()

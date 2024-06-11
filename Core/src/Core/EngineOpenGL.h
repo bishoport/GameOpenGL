@@ -6,6 +6,10 @@
 #include "../tools/ModelLoader.h"
 #include "../tools/PrimitivesHelper.h"
 #include "Light.hpp"
+#include "../tools/RoofGenerator.hpp"
+//#include "../tools/RoofGenerator.h"
+#include "../tools/FreeTypeManager.h"
+
 
 namespace libCore
 {
@@ -28,21 +32,23 @@ namespace libCore
 
         //VIEWPORTS
         void CreateViewport(std::string name, glm::vec3 cameraPosition);
-        void RenderViewports(const std::vector<Ref<libCore::ModelContainer>>& modelsInScene);
+        void RenderViewports();
         void DrawViewports_ImGUI();
 
 
         //PANELS
-        void DrawHierarchyPanel(const std::vector<Ref<libCore::ModelContainer>>& modelsInScene);
+        void DrawHierarchyPanel();
 
 
         //GENERACION DE PRIMITIVAS
-        Ref<ModelContainer> CreatePrefabDot(const glm::vec3& pos);
-        Ref<ModelContainer> CreatePrefabLine(const glm::vec3& point1, const glm::vec3& point2);
-        Ref<ModelContainer> CreatePrefabCube();
-        Ref<ModelContainer> CreatePrefabSphere(float radius, unsigned int sectorCount, unsigned int stackCount);
+        void CreatePrefabDot(const glm::vec3& pos, const glm::vec3& polygonColor);
+        void CreatePrefabLine(const glm::vec3& point1, const glm::vec3& point2);
+        void CreatePrefabCube();
+        void CreatePrefabSphere(float radius, unsigned int sectorCount, unsigned int stackCount);
 
-        Ref<ModelContainer> CreateRoof();
+        void PaintRoofDataPoints(const RoofData& data);
+        void PaintSkeletonPoints(const Skeleton& skeleton);
+        void CreateRoof(const std::vector<Vector2d>& points, const std::vector<Vector2d>& holes);
 
 
         // Función estática para obtener la instancia de EngineOpenGL
@@ -58,6 +64,12 @@ namespace libCore
         }
  
     private:
+
+        bool m_wireframe = false;
+
+        FreeTypeManager* freeTypeManager = nullptr;
+
+        std::vector<Ref<libCore::ModelContainer>> modelsInScene;
 
         GLFWwindow* window;
         Timestep m_deltaTime;
@@ -133,6 +145,14 @@ namespace libCore
             glDrawArrays(GL_TRIANGLES, 0, 6);
             glBindVertexArray(0);
         }
+
+
+
+        //PARA LOS ROOF
+        
+
+        void PaintRootDataLabels();
+        void PaintSkeletonLabels();
 
     };
 }
