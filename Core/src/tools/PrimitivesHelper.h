@@ -15,5 +15,6 @@ namespace libCore
         static Ref<Mesh> CreateSphere(float radius, unsigned int sectorCount, unsigned int stackCount);
         static Ref<Mesh> CreateDot();
         static Ref<Mesh> CreateLine(const glm::vec3& point1, const glm::vec3& point2);
+        static Ref<Mesh> CreateBoundingBox();
     };
 }

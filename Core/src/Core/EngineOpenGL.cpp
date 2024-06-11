@@ -80,6 +80,10 @@ namespace libCore
 		shaderManager.setShaderDataLoad("shaderLightingPass", shadersDirectory + "deferred/deferred_lighting_pass.vert", shadersDirectory + "deferred/deferred_lighting_pass.frag");
 		shaderManager.setShaderDataLoad("combinePass", shadersDirectory + "combine.vert", shadersDirectory + "combine.frag");
 
+		// -- Gizmos
+		shaderManager.setShaderDataLoad("Gizmos", shadersDirectory + "Gizmos.vert", shadersDirectory + "Gizmos.frag");
+
+
 		shaderManager.LoadAllShaders();
 		//-----------------------------------------------------------------
 
@@ -403,7 +407,10 @@ namespace libCore
 		for (auto& modelContainer : modelsInScene) {
 			modelContainer->Draw("shaderGeometryPass");
 			if (modelContainer->isBoundingBox) {
-
+				Renderer rend = EntityManager::GetInstance().m_registry.get<Renderer>(Scene::GetInstance().entitiesDictionary[modelContainer->entityIdentifier]);
+				Scene::GetInstance().systemRender.RendererBox(modelContainer, 
+					EntityManager::GetInstance().m_registry.get<Transform>(Scene::GetInstance().entitiesDictionary[modelContainer->entityIdentifier]), 
+					viewport->camera->cameraMatrix);
 			}
 		}
 
@@ -610,6 +617,8 @@ namespace libCore
 		return modelContainer;
 	}
 
+
+
 	Ref<ModelContainer> EngineOpenGL::CreatePrefabLine(const glm::vec3& point1, const glm::vec3& point2)
 	{
 		auto modelContainer = CreateRef<ModelContainer>();
@@ -681,8 +690,9 @@ namespace libCore
 		auto modelBuild = CreateRef<Model>();
 
 		modelContainer->name = "PRIMIVITE_CUBE";
+		//modelBuild->meshes.push_back(PrimitivesHelper::CreateBoundingBox());
 		modelBuild->meshes.push_back(PrimitivesHelper::CreateCube());
-		
+
 
 		//--DEFAULT_MATERIAL
 		auto material = CreateRef<Material>();
@@ -806,6 +816,20 @@ namespace libCore
 		modelContainer->models.push_back(modelBuild);
 
 		return modelContainer;
+	}
+
+	void EngineOpenGL::AddBounding(Ref<libCore::ModelContainer>& modelLoader) {
+		AttachBounding(modelLoader->models[0]);
+	}
+	void EngineOpenGL::AttachBounding(Ref<libCore::Model>& attachToModel)
+	{
+		attachToModel->meshes.push_back(PrimitivesHelper::CreateBoundingBox());
+		auto material = CreateRef<Material>();
+		material->materialName = "default_material";
+
+		material->color.r = 1.0f;
+		material->albedoMap = assetsManager.GetTexture("default_albedo");
+		attachToModel->materials.push_back(material);
 	}
 
 	// -------------------------------------------------

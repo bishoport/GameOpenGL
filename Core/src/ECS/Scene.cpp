@@ -4,7 +4,7 @@
 
 entt::entity Scene::EntityCreator(Ref<libCore::ModelContainer> modelContainer, std::string nameEntity)
 {
-
+	libCore::EngineOpenGL::GetInstance().AddBounding(modelContainer);
 	unsigned index = entitiesDictionary.size() + 1;
 	entt::entity entity = EntityManager::GetInstance().m_registry.create();
 	modelContainer->entityIdentifier = index;
@@ -35,6 +35,10 @@ void Scene::BeginPlay()
 	EntityCreator(libCore::EngineOpenGL::GetInstance().CreateRoof(), "Roof 1");
 	EntityCreator(libCore::EngineOpenGL::GetInstance().CreateRoof(), "Roof 2");
 	EntityCreator(libCore::EngineOpenGL::GetInstance().CreateRoof(), "Roof 3");
+	/*Ref<libCore::ModelContainer> modelContainer = libCore::EngineOpenGL::GetInstance().CreateRoof();
+	EntityCreator(modelContainer, "Roof 3");*/
+	//EntityCreator(libCore::EngineOpenGL::GetInstance().CreatePrefabCube(), "Bounding Box");
+
 
 }
 

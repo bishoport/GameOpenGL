@@ -226,6 +226,7 @@ namespace libCore
                     if (ImGui::TreeNode(&EntityManager::GetInstance().m_registry.get<libCore::Renderer>(newEntity), "Renderer"))
                     {
                         ImGui::BulletText("TESTING");
+                        ImGui::Checkbox("Render Bounding Box", &EntityManager::GetInstance().m_registry.get<libCore::Renderer>(newEntity).modelContainerData->isBoundingBox);
                         ImGui::TreePop();
                     }
                 }

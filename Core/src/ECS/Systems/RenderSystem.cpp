@@ -25,7 +25,7 @@ Ref<libCore::ModelContainer> RenderSystem::PrepareGeometryForModelContainer(entt
     return renderer.modelContainerData;
 }
 
-void RenderSystem::RendererBox(Ref<libCore::ModelContainer> modelContainer, glm::mat4 model, glm::mat4 camView, glm::vec3 position)
+std::vector<glm::vec3> RenderSystem::RendererBox(Ref<libCore::ModelContainer> modelContainer, libCore::Transform transform, glm::mat4 camView)
 {
 	glm::vec3 boundingBoxMin = glm::vec3(std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
 	glm::vec3 boundingBoxMax = glm::vec3(-std::numeric_limits<float>::max(), -std::numeric_limits<float>::max(), -std::numeric_limits<float>::max());
@@ -37,7 +37,7 @@ void RenderSystem::RendererBox(Ref<libCore::ModelContainer> modelContainer, glm:
 				GLfloat x = modelContainer->models[i]->meshes[j]->vertices[h].position.x;
 				GLfloat y = modelContainer->models[i]->meshes[j]->vertices[h].position.y;
 				GLfloat z = modelContainer->models[i]->meshes[j]->vertices[h].position.z;
-				glm::vec4 vertex = model * glm::vec4(x, y, z, 1.f);
+				glm::vec4 vertex = transform.getMatrix() * glm::vec4(x, y, z, 1.f);
 				// Update the minimum and maximum values of the bounding box
 				boundingBoxMin.x = std::min(boundingBoxMin.x, vertex.x);
 				boundingBoxMin.y = std::min(boundingBoxMin.y, vertex.y);
@@ -56,10 +56,10 @@ void RenderSystem::RendererBox(Ref<libCore::ModelContainer> modelContainer, glm:
 
 	glm::vec3 newPos = obtainCenter(boundingBoxMax, boundingBoxMin);
 	glm::mat4 bb_matrix = glm::mat4(1.0);
-	bb_matrix = glm::translate(bb_matrix, position);
+	bb_matrix = glm::translate(bb_matrix, newPos);
 
-
-	modelContainer->DrawBB("Gizmos", bb_matrix, lines);
+	return lines;
+	//modelContainer->DrawBB("Gizmos", bb_matrix, lines, camView);
 
 }
 

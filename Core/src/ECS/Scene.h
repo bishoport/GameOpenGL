@@ -5,11 +5,12 @@
 
 class Scene : public Singleton<Scene> {
 private:
-	RenderSystem systemRender;
 	
 	entt::entity EntityCreator(Ref<libCore::ModelContainer> modelContainer, std::string nameEntity = "");
 
 public:
+	RenderSystem systemRender;
+
 	std::vector<Ref<libCore::ModelContainer>> modelsInScene;
 	//Visible for the editor
 	std::map<int, entt::entity> entitiesDictionary;

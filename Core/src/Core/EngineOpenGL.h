@@ -40,9 +40,9 @@ namespace libCore
         Ref<ModelContainer> CreatePrefabLine(const glm::vec3& point1, const glm::vec3& point2);
         Ref<ModelContainer> CreatePrefabCube();
         Ref<ModelContainer> CreatePrefabSphere(float radius, unsigned int sectorCount, unsigned int stackCount);
-
         Ref<ModelContainer> CreateRoof();
-
+        void AddBounding(Ref<libCore::ModelContainer>& modelLoader);
+        void AttachBounding(Ref<libCore::Model>& attachToModel);
 
         // Función estática para obtener la instancia de EngineOpenGL
         static EngineOpenGL& GetInstance()

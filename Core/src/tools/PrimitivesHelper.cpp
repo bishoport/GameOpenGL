@@ -233,6 +233,7 @@ namespace libCore {
         return mesh;
     }
 
+
     Ref<Mesh> PrimitivesHelper::CreateLine(const glm::vec3& point1, const glm::vec3& point2)
     {
         auto mesh = CreateRef<Mesh>();
@@ -267,6 +268,81 @@ namespace libCore {
             mesh->vertices.push_back(vertex);
         }
         mesh->drawLike = DRAW_GEOM_LIKE::LINE;
+        mesh->SetupMesh();
+
+        return mesh;
+    }
+    Ref<Mesh> PrimitivesHelper::CreateBoundingBox()
+    {
+        auto mesh = CreateRef<Mesh>();
+
+        std::vector<GLfloat> vertices = {
+            // Cara delantera
+           -0.5f,  0.5f,  0.5f,  
+           -0.5f, -0.5f,  0.5f, 
+            0.5f, -0.5f,  0.5f,  
+            0.5f,  0.5f,  0.5f,
+
+            // Cara trasera
+            -0.5f,  0.5f, -0.5f, 
+            -0.5f, -0.5f, -0.5f, 
+             0.5f, -0.5f, -0.5f, 
+             0.5f,  0.5f, -0.5f, 
+
+             // Cara izquierda
+             -0.5f,  0.5f, -0.5f, 
+             -0.5f, -0.5f, -0.5f, 
+             -0.5f, -0.5f,  0.5f, 
+             -0.5f,  0.5f,  0.5f,  
+
+             // Cara derecha
+              0.5f,  0.5f, -0.5f,
+              0.5f, -0.5f, -0.5f, 
+              0.5f, -0.5f,  0.5f,
+              0.5f,  0.5f,  0.5f, 
+
+              // Cara superior
+              -0.5f,  0.5f, -0.5f, 
+              -0.5f,  0.5f,  0.5f, 
+               0.5f,  0.5f,  0.5f, 
+               0.5f,  0.5f, -0.5f, 
+
+               // Cara inferior
+               -0.5f, -0.5f, -0.5f,
+               -0.5f, -0.5f,  0.5f,
+                0.5f, -0.5f,  0.5f, 
+                0.5f, -0.5f, -0.5f
+        };
+
+
+        std::vector<GLuint> indices = {
+           0, 1,
+            1, 2,
+            2, 3,
+            3, 0,
+            4, 5,
+            5, 6,
+            6, 7,
+            7, 4,
+            0, 4,
+            1, 5,
+            2, 6,
+            3, 7
+        };
+
+
+        mesh->vertices.reserve(vertices.size() / 3); // Dividimos por 8 porque cada vértice tiene 8 floats
+
+        for (size_t i = 0; i < vertices.size(); i += 3) {
+            Vertex vertex;
+            vertex.position = glm::vec3(vertices[i], vertices[i + 1], vertices[i + 2]);
+            vertex.tangent = glm::vec3(0.0f, 0.0f, 0.0f);
+            vertex.bitangent = glm::vec3(0.0f, 0.0f, 0.0f);
+            mesh->vertices.push_back(vertex);
+
+        }
+        mesh->indices = indices;
+        mesh->drawLike = DRAW_GEOM_LIKE::LINES;
         mesh->SetupMesh();
 
         return mesh;

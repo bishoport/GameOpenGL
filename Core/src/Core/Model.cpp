@@ -22,10 +22,5 @@ namespace libCore
 			meshes[i]->Draw();
 		}
 	}
-	void Model::DrawBB(const std::string& shader, glm::mat4 bbcenter)
-	{
-		libCore::ShaderManager::Get(shader)->setMat4("model", bbcenter);
-		meshes[0]->DrawBoundingBox();
-
-	}
+	
 }

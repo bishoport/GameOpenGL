@@ -56,6 +56,7 @@ enum DRAW_GEOM_LIKE
 {
 	DOT,
 	LINE,
+	LINES,
 	TRIANGLE
 };
 

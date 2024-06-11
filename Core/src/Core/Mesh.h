@@ -26,14 +26,10 @@ namespace libCore
 
 		void Draw();
 
-		void BindBoundingBox(std::vector<glm::vec3> lines);
 
-		void DrawBoundingBox();
 
-		std::vector<Vertex> convertCoordsToVertexMap(std::vector<glm::vec3> positions);
 
 	private:
-		VAO VAO_BB;
 		VAO VAO;
 	};
 }
