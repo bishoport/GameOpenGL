@@ -36,6 +36,7 @@ namespace libCore
 		{
 			for (auto& model : models)
 			{
+				model->isBB = isBoundingBox;
 				model->Draw(shader);
 				
 			}

@@ -823,7 +823,9 @@ namespace libCore
 	}
 	void EngineOpenGL::AttachBounding(Ref<libCore::Model>& attachToModel)
 	{
-		attachToModel->meshes.push_back(PrimitivesHelper::CreateBoundingBox());
+		Ref<libCore::Mesh> mesh = PrimitivesHelper::CreateBoundingBox();
+		mesh->isBB = true;
+		attachToModel->meshes.push_back(mesh);
 		auto material = CreateRef<Material>();
 		material->materialName = "default_material";
 

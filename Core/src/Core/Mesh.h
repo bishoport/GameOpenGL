@@ -14,6 +14,7 @@ namespace libCore
 		// Initializes the mesh
 		Mesh() = default;
 
+		bool isBB;
 		std::string meshName = "unknow_mesh_name";
 		glm::vec3 meshLocalPosition = glm::vec3(0.0f);
 
