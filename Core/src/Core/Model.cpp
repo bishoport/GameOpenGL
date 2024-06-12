@@ -12,11 +12,10 @@ namespace libCore
 
 			materials[i]->albedoMap->Bind(shader);
 			libCore::ShaderManager::Get(shader)->setVec3("uniformColor", materials[i]->color);
-			
 
 			//materials[i]->normalMap->Bind(shader);
 			//materials[i]->metallicMap->Bind(shader);
-			//materials[i]->rougnessMap->Bind(shader);
+			//materials[i]->roughnessMap->Bind(shader);
 			//materials[i]->aOMap->Bind(shader);
 		}
 		

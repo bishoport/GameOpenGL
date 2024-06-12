@@ -19,49 +19,25 @@ void MapEditor::Init()
 
 
     // -- PREPARE GEOMETRY
-    //libCore::ImportModelData importModelData;
-    //importModelData.filePath = "assets/models/Robot/";
-    //importModelData.fileName = "Robot.fbx";
-    //importModelData.invertUV = false;
-    //importModelData.rotate90 = false;
-    //importModelData.useCustomTransform = true;
-    //importModelData.modelID = 1;
-    //importModelData.globalScaleFactor = 1.0f;
+    libCore::ImportModelData importModelData;
+    importModelData.filePath = "assets/models/Robot/";
+    importModelData.fileName = "Robot.fbx";
+    importModelData.invertUV = false;
+    importModelData.rotate90 = false;
+    importModelData.useCustomTransform = true;
+    importModelData.modelID = 1;
+    importModelData.globalScaleFactor = 1.0f;
+    libCore::EngineOpenGL::GetInstance().CreatePrefabExternalModel(importModelData);
 
-    //libCore::ImportModelData importModelData2;
-    //importModelData2.filePath = "assets/models/Turbina/";
-    //importModelData2.fileName = "turbina.fbx";
-    //importModelData2.invertUV = false;
-    //importModelData2.rotate90 = false;
-    //importModelData2.useCustomTransform = true;
-    //importModelData2.modelID = 1;
-    //importModelData2.globalScaleFactor = 0.1f;
-
-
-
-    //modelsInScene.push_back(libCore::ModelLoader::LoadModel(importModelData));
-    //modelsInScene.push_back(libCore::ModelLoader::LoadModel(importModelData2));
-
-
-    //Ejemplo de figura con puntos y lineas por separado
-    //modelsInScene.push_back(libCore::EngineOpenGL::GetInstance().CreatePrefabDot(glm::vec3(-2.0f, 0.0f,  2.0f)));
-    //modelsInScene.push_back(libCore::EngineOpenGL::GetInstance().CreatePrefabDot(glm::vec3(-2.0f, 0.0f, -2.0f)));
-    //modelsInScene.push_back(libCore::EngineOpenGL::GetInstance().CreatePrefabDot(glm::vec3( 2.0f, 0.0f, -2.0f)));
-    //modelsInScene.push_back(libCore::EngineOpenGL::GetInstance().CreatePrefabDot(glm::vec3( 2.0f, 0.0f,  2.0f)));
-    //modelsInScene.push_back(libCore::EngineOpenGL::GetInstance().CreatePrefabLine(glm::vec3(-2.0f, 0.0f, 2.0f),glm::vec3(-2.0f, 0.0f, -2.0f)));
-    //modelsInScene.push_back(libCore::EngineOpenGL::GetInstance().CreatePrefabLine(glm::vec3(-2.0f, 0.0f, -2.0f),glm::vec3(2.0f, 0.0f, -2.0f)));
-    //modelsInScene.push_back(libCore::EngineOpenGL::GetInstance().CreatePrefabLine(glm::vec3(2.0f, 0.0f, -2.0f),glm::vec3(2.0f, 0.0f, 2.0f)));
-    //modelsInScene.push_back(libCore::EngineOpenGL::GetInstance().CreatePrefabLine(glm::vec3(2.0f, 0.0f, 2.0f),glm::vec3(-2.0f, 0.0f, 2.0f)));
-
-
-    //modelsInScene.push_back(libCore::EngineOpenGL::GetInstance().CreatePrefabCube());
-
-                                                                                                                           
-    //libCore::EngineOpenGL::GetInstance().CreateRoof();
-
-
-
-
+    libCore::ImportModelData importModelData2;
+    importModelData2.filePath = "assets/models/Turbina/";
+    importModelData2.fileName = "turbina.fbx";
+    importModelData2.invertUV = false;
+    importModelData2.rotate90 = false;
+    importModelData2.useCustomTransform = true;
+    importModelData2.modelID = 1;
+    importModelData2.globalScaleFactor = 0.1f;
+    libCore::EngineOpenGL::GetInstance().CreatePrefabExternalModel(importModelData2);
 
 
     // -- VIEWPORTS
@@ -80,10 +56,6 @@ void MapEditor::LoopOpenGL(libCore::Timestep deltaTime)
 {
     libCore::EngineOpenGL::GetInstance().RenderViewports(); 
 }
-
-
-
-
 
 
 void MapEditor::LoopImGUI()

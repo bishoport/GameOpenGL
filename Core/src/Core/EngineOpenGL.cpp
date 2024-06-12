@@ -289,7 +289,7 @@ namespace libCore
 	//--RENDER PIPELINE
 	void EngineOpenGL::RenderViewports()
 	{
-
+		//Esto está aqui porque lo estoy usando de Loop principal pero esto debe cambiar
 		if (InputManager::Instance().IsKeyJustPressed(GLFW_KEY_P))
 		{
 			m_wireframe = !m_wireframe;
@@ -514,6 +514,10 @@ namespace libCore
 
 
 	//--CREADOR DE PREFABS
+	void libCore::EngineOpenGL::CreatePrefabExternalModel(ImportModelData importModelData)
+	{
+		modelsInScene.push_back(libCore::ModelLoader::LoadModel(importModelData));
+	}
 	void EngineOpenGL::CreatePrefabDot(const glm::vec3& pos, const glm::vec3& polygonColor)
 	{
 		auto modelContainer = CreateRef<ModelContainer>();
@@ -651,7 +655,7 @@ namespace libCore
 		{
 			guiLayer->DrawHierarchyPanel(modelsInScene);
 			guiLayer->DrawLightsPanel(lights);
-			guiLayer->RenderCheckerMatrix();
+			//guiLayer->RenderCheckerMatrix(); //Panel para el editor de roofs
 		}
 	}
 	// -------------------------------------------------

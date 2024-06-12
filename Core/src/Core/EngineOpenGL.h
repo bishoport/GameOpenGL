@@ -37,6 +37,7 @@ namespace libCore
 
 
         //GENERACION DE PRIMITIVAS
+        void CreatePrefabExternalModel(ImportModelData importModelData);
         void CreatePrefabDot(const glm::vec3& pos, const glm::vec3& polygonColor);
         void CreatePrefabLine(const glm::vec3& point1, const glm::vec3& point2);
         void CreatePrefabCube();
