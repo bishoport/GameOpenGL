@@ -2,8 +2,11 @@
 #include "entt.hpp"
 namespace libCore
 {
-    struct ConfigComp {
+    struct EntityInfo {
         std::string name;
+        //tag
+        // layer
+
     };
 
     struct Transform {

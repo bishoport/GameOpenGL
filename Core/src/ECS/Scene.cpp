@@ -13,7 +13,7 @@ entt::entity Scene::EntityCreator(Ref<libCore::ModelContainer> modelContainer, s
 	if (nameEntity.size() <= 0)
 		nameEntity = "ACTOR_" + std::to_string(index);
 	
-	EntityManager::GetInstance().m_registry.emplace<libCore::ConfigComp>(entity, nameEntity);
+	EntityManager::GetInstance().m_registry.emplace<libCore::EntityInfo>(entity, nameEntity);
 
 	modelsInScene.push_back(modelContainer);
 	entitiesDictionary.emplace(index, entity);

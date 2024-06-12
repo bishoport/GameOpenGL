@@ -827,6 +827,7 @@ namespace libCore
 		mesh->isBB = true;
 		attachToModel->meshes.push_back(mesh);
 		auto material = CreateRef<Material>();
+		//Cambiar por un material con el shader debug
 		material->materialName = "default_material";
 
 		material->color.r = 1.0f;

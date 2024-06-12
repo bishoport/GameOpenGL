@@ -202,7 +202,7 @@ namespace libCore
        for (auto& modelContainer : modelsInScene) {
 
            entt::entity newEntity = Scene::GetInstance().entitiesDictionary[modelContainer->entityIdentifier];
-           std::string nameEntity = EntityManager::GetInstance().m_registry.get<libCore::ConfigComp>(newEntity).name;
+           std::string nameEntity = EntityManager::GetInstance().m_registry.get<libCore::EntityInfo>(newEntity).name;
 
             if (ImGui::TreeNode(&newEntity, nameEntity.c_str())) {
                 if (EntityManager::GetInstance().m_registry.has<Transform>(newEntity)) {

@@ -272,10 +272,11 @@ namespace libCore {
 
         return mesh;
     }
+
     Ref<Mesh> PrimitivesHelper::CreateBoundingBox()
     {
         auto mesh = CreateRef<Mesh>();
-
+        //Otra opcion. Pintar con lineas, unir 
         std::vector<GLfloat> vertices = {
             // Cara delantera
            -0.5f,  0.5f,  0.5f,  
@@ -331,7 +332,7 @@ namespace libCore {
         };
 
 
-        mesh->vertices.reserve(vertices.size() / 3); // Dividimos por 8 porque cada vértice tiene 8 floats
+        mesh->vertices.reserve(vertices.size() / 3);
 
         for (size_t i = 0; i < vertices.size(); i += 3) {
             Vertex vertex;
