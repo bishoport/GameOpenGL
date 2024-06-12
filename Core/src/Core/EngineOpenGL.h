@@ -6,8 +6,8 @@
 #include "../tools/ModelLoader.h"
 #include "../tools/PrimitivesHelper.h"
 #include "Light.hpp"
-#include "../tools/RoofGenerator.hpp"
-//#include "../tools/RoofGenerator.h"
+
+#include "../StraightSkeleton/Vector2d.h"
 #include "../tools/FreeTypeManager.h"
 
 
@@ -30,14 +30,10 @@ namespace libCore
         void SetupInputCallbacks();
 
 
-        //VIEWPORTS
+        //VIEWPORTS & RENDER
         void CreateViewport(std::string name, glm::vec3 cameraPosition);
         void RenderViewports();
         void DrawViewports_ImGUI();
-
-
-        //PANELS
-        void DrawHierarchyPanel();
 
 
         //GENERACION DE PRIMITIVAS
@@ -45,10 +41,10 @@ namespace libCore
         void CreatePrefabLine(const glm::vec3& point1, const glm::vec3& point2);
         void CreatePrefabCube();
         void CreatePrefabSphere(float radius, unsigned int sectorCount, unsigned int stackCount);
-
-        void PaintRoofDataPoints(const RoofData& data);
-        void PaintSkeletonPoints(const Skeleton& skeleton);
         void CreateRoof(const std::vector<Vector2d>& points, const std::vector<Vector2d>& holes);
+
+        //PANELS
+        void DrawHierarchyPanel();
 
 
         // Función estática para obtener la instancia de EngineOpenGL
@@ -62,12 +58,13 @@ namespace libCore
         {
             return GetInstance().window;
         }
- 
-    private:
 
-        bool m_wireframe = false;
 
+    public:
         FreeTypeManager* freeTypeManager = nullptr;
+
+    private:
+        bool m_wireframe = false;
 
         std::vector<Ref<libCore::ModelContainer>> modelsInScene;
 
@@ -99,8 +96,6 @@ namespace libCore
 
 
 
-
-
         //--------------------------ESTO VA FUERA-----------------------------------------------------------
         // lighting info
         // -------------
@@ -110,9 +105,8 @@ namespace libCore
         bool hdrEnabled = false;
         float hdrExposure = 1.0f;
 
-        const unsigned int NR_LIGHTS = 0;
+        const unsigned int NR_LIGHTS = 10;
         std::vector<Ref<Light>> lights;
-
 
         GLuint quadVAO, quadVBO;
         void setupQuad() {
@@ -145,14 +139,5 @@ namespace libCore
             glDrawArrays(GL_TRIANGLES, 0, 6);
             glBindVertexArray(0);
         }
-
-
-
-        //PARA LOS ROOF
-        
-
-        void PaintRootDataLabels();
-        void PaintSkeletonLabels();
-
     };
 }

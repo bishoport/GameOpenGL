@@ -13,6 +13,7 @@
 #include "../Timestep.h"
 #include "../tools/Camera.h"
 #include "Viewport.hpp"
+#include "../StraightSkeleton/Vector2d.h"
 
 namespace libCore
 {
