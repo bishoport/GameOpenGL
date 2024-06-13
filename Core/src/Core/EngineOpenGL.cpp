@@ -516,11 +516,14 @@ namespace libCore
 
 
 	//--CREADOR DE PREFABS
-	void libCore::EngineOpenGL::CreatePrefabExternalModel(ImportModelData importModelData)
+	Ref<libCore::ModelContainer>  libCore::EngineOpenGL::CreatePrefabExternalModel(ImportModelData importModelData)
 	{
-		modelsInScene.push_back(libCore::ModelLoader::LoadModel(importModelData));
+		Ref<libCore::ModelContainer> modelContainer = libCore::ModelLoader::LoadModel(importModelData);
+		modelsInScene.push_back(modelContainer);
+
+		return modelContainer;
 	}
-	void EngineOpenGL::CreatePrefabDot(const glm::vec3& pos, const glm::vec3& polygonColor)
+	Ref<libCore::ModelContainer> EngineOpenGL::CreatePrefabDot(const glm::vec3& pos, const glm::vec3& polygonColor)
 	{
 		auto modelContainer = CreateRef<ModelContainer>();
 		modelContainer->skeletal = false;
@@ -529,7 +532,7 @@ namespace libCore
 		modelBuild->transform.position = pos;
 		modelContainer->name = "PRIMITIVE_DOT";
 		modelBuild->meshes.push_back(PrimitivesHelper::CreateDot());
-		
+		modelBuild->meshes.push_back(PrimitivesHelper::CreateBoundingBox());
 
 		//--DEFAULT_MATERIAL
 		auto material = CreateRef<Material>();
@@ -547,9 +550,11 @@ namespace libCore
 
 		modelContainer->models.push_back(modelBuild);
 
-		Scene::GetInstance().modelsInScene.push_back(modelContainer);
+		modelsInScene.push_back(modelContainer);
+
+		return modelContainer;
 	}
-	void EngineOpenGL::CreatePrefabLine(const glm::vec3& point1, const glm::vec3& point2)
+	Ref<libCore::ModelContainer> EngineOpenGL::CreatePrefabLine(const glm::vec3& point1, const glm::vec3& point2)
 	{
 		auto modelContainer = CreateRef<ModelContainer>();
 		modelContainer->skeletal = false;
@@ -577,9 +582,11 @@ namespace libCore
 
 		modelBuild->materials.push_back(material);
 
-		Scene::GetInstance().modelsInScene.push_back(modelContainer);
+		modelsInScene.push_back(modelContainer);
+
+		return modelContainer;
 	}
-	void EngineOpenGL::CreatePrefabSphere(float radius, unsigned int sectorCount, unsigned int stackCount)
+	Ref<libCore::ModelContainer> EngineOpenGL::CreatePrefabSphere(float radius, unsigned int sectorCount, unsigned int stackCount)
 	{
 		auto modelContainer = CreateRef<ModelContainer>();
 		modelContainer->skeletal = false;
@@ -589,6 +596,8 @@ namespace libCore
 
 		modelContainer->name = "PRIMIVITE_SPHERE";
 		modelBuild->meshes.push_back(PrimitivesHelper::CreateSphere(0.01f, 6, 6));
+		modelBuild->meshes.push_back(PrimitivesHelper::CreateBoundingBox());
+
 		modelContainer->models.push_back(modelBuild);
 
 
@@ -608,7 +617,9 @@ namespace libCore
 
 		modelBuild->materials.push_back(material);
 
-		Scene::GetInstance().modelsInScene.push_back(modelContainer);
+		modelsInScene.push_back(modelContainer);
+
+		return modelContainer;
 	}
 	Ref<libCore::ModelContainer> EngineOpenGL::CreatePrefabCube()
 	{
@@ -639,17 +650,19 @@ namespace libCore
 
 		modelContainer->models.push_back(modelBuild);
 
-		Scene::GetInstance().modelsInScene.push_back(modelContainer);
-
+	//	Scene::GetInstance().modelsInScene.push_back(modelContainer);
+		modelsInScene.push_back(modelContainer);
 		return modelContainer;
 	}
 
 
 
 	//--ROOF´s
-	void EngineOpenGL::CreateRoof(const std::vector<Vector2d>& points, const std::vector<Vector2d>& holes)
+	Ref<libCore::ModelContainer> EngineOpenGL::CreateRoof(const std::vector<Vector2d>& points, const std::vector<Vector2d>& holes)
 	{
-		modelsInScene.push_back(roofGenerator->GenerateRoof(points, holes));
+		Ref<ModelContainer> model = roofGenerator->GenerateRoof(points, holes);
+		modelsInScene.push_back(model);
+		return model;
 	}
 	// -------------------------------------------------
 	// -------------------------------------------------

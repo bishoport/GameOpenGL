@@ -31,4 +31,7 @@ public:
 	Ref<libCore::ModelContainer> ModelContainer(entt::entity entity) {
 		return systemRender.PrepareGeometryForModelContainer(EntityManager::GetInstance().m_registry, entity);
 	}
+
+	void CreateCube();
+	void CreateSphere(float radius = 6, unsigned int sectorCount  = 1 , unsigned int stackCount = 1);
 };

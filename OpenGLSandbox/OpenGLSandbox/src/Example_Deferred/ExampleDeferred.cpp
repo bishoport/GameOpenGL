@@ -220,7 +220,7 @@ void ExampleDeferred::OnCloseOpenGL()
 
 void ExampleDeferred::LoadModelInScene(libCore::ImportModelData importModelData)
 {
-    modelsInScene.push_back(libCore::ModelLoader::LoadModel(importModelData));
+ //   modelsInScene.push_back(libCore::ModelLoader::LoadModel(importModelData));
     //modelsInScene.push_back(libCore::SkeletalModelLoader::LoadModel(importModelData));
 }
 

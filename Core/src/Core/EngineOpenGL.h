@@ -36,12 +36,12 @@ namespace libCore
 
 
         //GENERACION DE PRIMITIVAS
-        void CreatePrefabExternalModel(ImportModelData importModelData);
-        void CreatePrefabDot(const glm::vec3& pos, const glm::vec3& polygonColor);
-        void CreatePrefabLine(const glm::vec3& point1, const glm::vec3& point2);
+        Ref<libCore::ModelContainer>  CreatePrefabExternalModel(ImportModelData importModelData);
+        Ref<libCore::ModelContainer>  CreatePrefabDot(const glm::vec3& pos, const glm::vec3& polygonColor);
+        Ref<libCore::ModelContainer>  CreatePrefabLine(const glm::vec3& point1, const glm::vec3& point2);
         Ref<libCore::ModelContainer> CreatePrefabCube();
-        void CreatePrefabSphere(float radius, unsigned int sectorCount, unsigned int stackCount);
-        void CreateRoof(const std::vector<Vector2d>& points, const std::vector<Vector2d>& holes);
+        Ref<libCore::ModelContainer>  CreatePrefabSphere(float radius, unsigned int sectorCount, unsigned int stackCount);
+        Ref<libCore::ModelContainer>  CreateRoof(const std::vector<Vector2d>& points, const std::vector<Vector2d>& holes);
 
         //PANELS
         void DrawHierarchyPanel();
