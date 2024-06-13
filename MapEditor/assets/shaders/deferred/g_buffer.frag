@@ -6,6 +6,7 @@ in vec3 Normal;
 
 uniform sampler2D diffuseTexture;
 uniform sampler2D texture_specular1;
+uniform vec3 uniformColor; // Uniform para el color
 
 layout (location = 0) out vec3 gPosition;
 layout (location = 1) out vec3 gNormal;
@@ -19,9 +20,10 @@ void main()
     // Store the per-fragment normals into the gbuffer
     gNormal = normalize(Normal);
     
-    // Store the diffuse per-fragment color
-    gAlbedoSpec.rgb = texture(diffuseTexture, TexCoords).rgb;
+    // Store the diffuse per-fragment color, multiplied by the uniform color
+    gAlbedoSpec.rgb = texture(diffuseTexture, TexCoords).rgb * uniformColor;
     
     // Store specular intensity in gAlbedoSpec's alpha component
     gAlbedoSpec.a = texture(texture_specular1, TexCoords).r;
 }
+

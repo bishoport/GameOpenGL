@@ -309,18 +309,18 @@ namespace libCore
 
             if (texture != nullptr)
             {
-                material->rougnessMap = texture;
+                material->roughnessMap = texture;
             }
             else
             {
                 std::cout << "Error cargando mapa ROUGHTNESS, ponemos default_black" << std::endl;
-                material->rougnessMap = assetsManager.GetTexture("default_roughness");
+                material->roughnessMap = assetsManager.GetTexture("default_roughness");
             }
         }
         else
         {
             std::cout << "No hay mapa ROUGHTNESS, ponemos default_black" << std::endl;
-            material->rougnessMap = assetsManager.GetTexture("default_roughness");
+            material->roughnessMap = assetsManager.GetTexture("default_roughness");
         }
         //-------------------
 

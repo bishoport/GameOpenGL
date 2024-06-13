@@ -20,7 +20,10 @@ namespace libCore
 
     public:
 
+        using CallbackFromGuiLayer = std::function<void(const std::vector<Vector2d>&, const std::vector<Vector2d>&)>;
+
         GuiLayer(GLFWwindow* window, float window_W, float window_H);
+        void SetCallBackFunc(CallbackFromGuiLayer callbackFromGuiLayerFunc);
         ~GuiLayer();
 
         void begin();
@@ -35,9 +38,18 @@ namespace libCore
 		void DrawHierarchyPanel(const std::vector<Ref<libCore::ModelContainer>>& modelsInScene);
         void DrawLightsPanel(const std::vector<Ref<libCore::Light>>& lightsInScene);
 
+        void RenderCheckerMatrix();
+
     private:
+
+        CallbackFromGuiLayer m_callbackFromGuiLayerFunc;
+        std::vector<std::pair<int, int>> selectedOrder;
         bool ini_file_exists;
         float m_window_W = 0.0f;
         float m_window_H = 0.0f;
+
+        struct Point {
+            float x, y;
+        };
     };	
 }

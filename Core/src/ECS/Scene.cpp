@@ -1,4 +1,3 @@
-#pragma once
 #include "Scene.h"
 #include "../Core/EngineOpenGL.h"
 
@@ -32,9 +31,9 @@ void Scene::BeginPlay()
 	EntityCreator(libCore::EngineOpenGL::GetInstance().CreateRoof());
 	EntityCreator(libCore::EngineOpenGL::GetInstance().CreateRoof());*/
 
-	EntityCreator(libCore::EngineOpenGL::GetInstance().CreateRoof(), "Roof 1");
-	EntityCreator(libCore::EngineOpenGL::GetInstance().CreateRoof(), "Roof 2");
-	EntityCreator(libCore::EngineOpenGL::GetInstance().CreateRoof(), "Roof 3");
+	EntityCreator(libCore::EngineOpenGL::GetInstance().CreatePrefabCube(), "Roof 1");
+	EntityCreator(libCore::EngineOpenGL::GetInstance().CreatePrefabCube(), "Roof 2");
+	EntityCreator(libCore::EngineOpenGL::GetInstance().CreatePrefabCube(), "Roof 3");
 	/*Ref<libCore::ModelContainer> modelContainer = libCore::EngineOpenGL::GetInstance().CreateRoof();
 	EntityCreator(modelContainer, "Roof 3");*/
 	//EntityCreator(libCore::EngineOpenGL::GetInstance().CreatePrefabCube(), "Bounding Box");

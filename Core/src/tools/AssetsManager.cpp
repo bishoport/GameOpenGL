@@ -25,6 +25,11 @@ namespace libCore
 		SetTexture("default_ao", defaultAO);
 
 
+		Ref<Texture> checker = TextureManager::LoadTexture((defaultAssetsPathTexture + "checker.jpg").c_str(), TEXTURE_TYPES::ALBEDO, 0);
+		SetTexture("checker", checker);
+
+		
+
 		//PARA EL TEJADO
 		Ref<Texture> defaultRoof = TextureManager::LoadTexture((defaultAssetsPathTexture + "roof.jpg").c_str(), TEXTURE_TYPES::ALBEDO, 0);
 		SetTexture("default_roof", defaultRoof);

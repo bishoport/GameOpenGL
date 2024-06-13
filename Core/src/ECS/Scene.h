@@ -8,7 +8,10 @@ private:
 	
 	entt::entity EntityCreator(Ref<libCore::ModelContainer> modelContainer, std::string nameEntity = "");
 
+
 public:
+
+
 	RenderSystem systemRender;
 
 	std::vector<Ref<libCore::ModelContainer>> modelsInScene;

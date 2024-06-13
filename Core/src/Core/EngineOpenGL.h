@@ -5,11 +5,14 @@
 #include "../tools/ModelLoader.h"
 #include "../tools/PrimitivesHelper.h"
 #include "Light.hpp"
+#include "../tools/RoofGenerator.hpp"
+//#include "../tools/RoofGenerator.h"
+#include "../tools/FreeTypeManager.h"
 #include "../ECS/Scene.h"
-
 namespace libCore
 {
     //class GuiLayer;
+
     class EngineOpenGL
     {
         using MainLoopFnc = std::function<void(Timestep)>;
@@ -27,22 +30,24 @@ namespace libCore
 
         //VIEWPORTS
         void CreateViewport(std::string name, glm::vec3 cameraPosition);
-        void RenderViewports(const std::vector<Ref<libCore::ModelContainer>>& modelsInScene);
+        void RenderViewports();
         void DrawViewports_ImGUI();
 
 
         //PANELS
-        void DrawHierarchyPanel(const std::vector<Ref<libCore::ModelContainer>>& modelsInScene);
+        void DrawHierarchyPanel();
 
 
         //GENERACION DE PRIMITIVAS
-        Ref<ModelContainer> CreatePrefabDot(const glm::vec3& pos);
-        Ref<ModelContainer> CreatePrefabLine(const glm::vec3& point1, const glm::vec3& point2);
-        Ref<ModelContainer> CreatePrefabCube();
-        Ref<ModelContainer> CreatePrefabSphere(float radius, unsigned int sectorCount, unsigned int stackCount);
-        Ref<ModelContainer> CreateRoof();
-        void AddBounding(Ref<libCore::ModelContainer>& modelLoader);
-        void AttachBounding(Ref<libCore::Model>& attachToModel);
+        void CreatePrefabDot(const glm::vec3& pos, const glm::vec3& polygonColor);
+        void CreatePrefabLine(const glm::vec3& point1, const glm::vec3& point2);
+        Ref<libCore::ModelContainer> CreatePrefabCube();
+        void CreatePrefabSphere(float radius, unsigned int sectorCount, unsigned int stackCount);
+
+        void PaintRoofDataPoints(const RoofData& data);
+        void PaintSkeletonPoints(const Skeleton& skeleton);
+        void CreateRoof(const std::vector<Vector2d>& points, const std::vector<Vector2d>& holes);
+
 
         // Función estática para obtener la instancia de EngineOpenGL
         static EngineOpenGL& GetInstance()
@@ -56,7 +61,15 @@ namespace libCore
             return GetInstance().window;
         }
  
+        void AddBounding(Ref<libCore::ModelContainer>& modelLoader);
+        void AttachBounding(Ref<libCore::Model>& attachToModel);
     private:
+
+        bool m_wireframe = false;
+
+        FreeTypeManager* freeTypeManager = nullptr;
+
+       // std::vector<Ref<libCore::ModelContainer>> modelsInScene;
 
         GLFWwindow* window;
         Timestep m_deltaTime;
@@ -133,5 +146,13 @@ namespace libCore
             glBindVertexArray(0);
         }
 
+
+
+        //PARA LOS ROOF
+        
+
+        void PaintRootDataLabels();
+        void PaintSkeletonLabels();
+     
     };
 }

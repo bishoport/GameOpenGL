@@ -1,7 +1,9 @@
 #pragma once
 #include "../LibCoreHeaders.h"
 
-#include <ft2build.h>
+
+#include "ft2build.h"
+
 #include FT_FREETYPE_H
 
 #include <map> 
@@ -25,7 +27,7 @@ namespace libCore
             }
 
             // find path to font
-            std::string font_name = "C:/Users/pdortegon/Documents/PROPIOS/OpenGLSandbox_V1/MatrixStudio/assets/fonts/Antonio-Bold.ttf";
+            std::string font_name = "C:/Users/pdortegon/Documents/PROPIOS/OpenGL_DEV/OpenGLSandbox/Core/assets/fonts/Antonio-Bold.ttf";
             if (font_name.empty())
             {
                 std::cout << "ERROR::FREETYPE: Failed to load font_name" << std::endl;

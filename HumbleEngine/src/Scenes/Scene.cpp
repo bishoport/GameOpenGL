@@ -1,4 +1,5 @@
 #include "Scene.h"
+#include "Scene.h"
 #include "../ActorSystem/Components/RendererComponent.h"
 
 void Scene::SetUp(Ref<libCore::Camera> newCamera)
@@ -58,6 +59,10 @@ void Scene::Init()
 }
 
 
+
+Scene::Scene()
+{
+}
 
 void Scene::Tick(float deltaTime)
 {
