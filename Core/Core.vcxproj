@@ -82,7 +82,6 @@
     <ClInclude Include="src\tools\FreeTypeManager.h" />
     <ClInclude Include="src\tools\ModelLoader.h" />
     <ClInclude Include="src\tools\PrimitivesHelper.h" />
-    <ClInclude Include="src\tools\RoofGenerator.h" />
     <ClInclude Include="src\tools\RoofGenerator.hpp" />
     <ClInclude Include="src\tools\Shader.h" />
     <ClInclude Include="src\tools\ShaderManager.h" />
@@ -142,7 +141,6 @@
     <ClCompile Include="src\tools\Camera.cpp" />
     <ClCompile Include="src\tools\ModelLoader.cpp" />
     <ClCompile Include="src\tools\PrimitivesHelper.cpp" />
-    <ClCompile Include="src\tools\RoofGenerator.cpp" />
     <ClCompile Include="src\tools\ShaderManager.cpp" />
     <ClCompile Include="src\tools\SkeletalModelLoader.cpp" />
     <ClCompile Include="src\tools\TextureManager.cpp" />

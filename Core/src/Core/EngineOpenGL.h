@@ -1,12 +1,13 @@
 #pragma once
+
 #include "../LibCoreHeaders.h"
 #include "../Timestep.h"
 #include "../tools/AssetsManager.h"
 #include "../tools/ModelLoader.h"
 #include "../tools/PrimitivesHelper.h"
 #include "Light.hpp"
-#include "../tools/RoofGenerator.hpp"
-//#include "../tools/RoofGenerator.h"
+
+#include "../StraightSkeleton/Vector2d.h"
 #include "../tools/FreeTypeManager.h"
 #include "../ECS/Scene.h"
 namespace libCore
@@ -28,25 +29,22 @@ namespace libCore
         void SetupInputCallbacks();
 
 
-        //VIEWPORTS
+        //VIEWPORTS & RENDER
         void CreateViewport(std::string name, glm::vec3 cameraPosition);
         void RenderViewports();
         void DrawViewports_ImGUI();
 
 
-        //PANELS
-        void DrawHierarchyPanel();
-
-
         //GENERACION DE PRIMITIVAS
+        void CreatePrefabExternalModel(ImportModelData importModelData);
         void CreatePrefabDot(const glm::vec3& pos, const glm::vec3& polygonColor);
         void CreatePrefabLine(const glm::vec3& point1, const glm::vec3& point2);
         Ref<libCore::ModelContainer> CreatePrefabCube();
         void CreatePrefabSphere(float radius, unsigned int sectorCount, unsigned int stackCount);
-
-        void PaintRoofDataPoints(const RoofData& data);
-        void PaintSkeletonPoints(const Skeleton& skeleton);
         void CreateRoof(const std::vector<Vector2d>& points, const std::vector<Vector2d>& holes);
+
+        //PANELS
+        void DrawHierarchyPanel();
 
 
         // Función estática para obtener la instancia de EngineOpenGL
@@ -63,13 +61,14 @@ namespace libCore
  
         void AddBounding(Ref<libCore::ModelContainer>& modelLoader);
         void AttachBounding(Ref<libCore::Model>& attachToModel);
-    private:
-
-        bool m_wireframe = false;
-
+   
+    public:
         FreeTypeManager* freeTypeManager = nullptr;
 
-       // std::vector<Ref<libCore::ModelContainer>> modelsInScene;
+    private:
+        bool m_wireframe = false;
+
+        std::vector<Ref<libCore::ModelContainer>> modelsInScene;
 
         GLFWwindow* window;
         Timestep m_deltaTime;
@@ -110,9 +109,8 @@ namespace libCore
         bool hdrEnabled = false;
         float hdrExposure = 1.0f;
 
-        const unsigned int NR_LIGHTS = 0;
+        const unsigned int NR_LIGHTS = 10;
         std::vector<Ref<Light>> lights;
-
 
         GLuint quadVAO, quadVBO;
         void setupQuad() {
@@ -145,14 +143,5 @@ namespace libCore
             glDrawArrays(GL_TRIANGLES, 0, 6);
             glBindVertexArray(0);
         }
-
-
-
-        //PARA LOS ROOF
-        
-
-        void PaintRootDataLabels();
-        void PaintSkeletonLabels();
-     
     };
 }

@@ -7,9 +7,11 @@
 #include <numeric>  // Para std::iota
 #include <glm/glm.hpp>  // Para transformaciones de matrices
 #include <glm/gtc/matrix_transform.hpp>
+#include "../Core/EngineOpenGL.h"
 
 namespace libCore {
 
+    //using namespace StraightSkeleton;
 
     struct RoofData {
         std::vector<Vector2d> polygon;
@@ -20,7 +22,42 @@ namespace libCore {
 
     class RoofGenerator {
 
+        // Utilizamos una estructura personalizada para comparar los vectores 2D en el mapa
+        struct Vector2dComparator {
+            bool operator()(const Vector2d& a, const Vector2d& b) const {
+                if (a.X != b.X)
+                    return a.X < b.X;
+                return a.Y < b.Y;
+            }
+        };
+
+
     public:
+
+
+        Ref<Skeleton> current_sk;
+        RoofData current_roofData;
+
+        Ref<ModelContainer> GenerateRoof(const std::vector<Vector2d>& points, const std::vector<Vector2d>& holes, double extrusionDistance = 0.0)
+        {
+            current_roofData.polygon = points;
+
+            if (extrusionDistance > 0.0)
+            {
+                auto extrudedPoints = extrudePolygon(points, extrusionDistance);
+                current_roofData.polygon = extrudedPoints;
+            }
+ 
+            current_roofData.hole = holes;
+            current_roofData.holes = { current_roofData.hole };
+            current_roofData.expected = {};
+
+            current_sk = CreateRef<Skeleton>(BuildSkeleton(current_roofData));
+            PaintSkeletonPoints(*current_sk);
+
+            return CreateRoof(*current_sk, 102);
+        }
+
         Skeleton BuildSkeleton(RoofData roofData) {
 
             roofData.expected.insert(roofData.expected.end(), roofData.polygon.begin(), roofData.polygon.end());
@@ -49,7 +86,6 @@ namespace libCore {
 
             return sk;
         }
-        
 
         void AddRoofVerticesFromEdges(std::vector<GLfloat>& vertexBuffer, std::vector<GLuint>& indices, const Skeleton& skeleton, size_t maxEdges = std::numeric_limits<size_t>::max()) {
             
@@ -109,8 +145,8 @@ namespace libCore {
             }
         }
 
-
         Ref<ModelContainer> CreateRoof(Skeleton sk, size_t maxEdges, float uvScale = 1.0f, float uvRotation = 0.0f) {
+
             auto modelContainer = CreateRef<ModelContainer>();
             modelContainer->skeletal = false;
 
@@ -121,6 +157,7 @@ namespace libCore {
 
             std::vector<GLfloat> vertexBuffer;
             std::vector<GLuint> indices;
+            
             AddRoofVerticesFromEdges(vertexBuffer, indices, sk, maxEdges);
 
             ApplyBoxUVProjection(vertexBuffer, uvScale, uvRotation);
@@ -211,6 +248,184 @@ namespace libCore {
             }
         }
 
+
+        //DRAW DEBUG
+        void PaintRoofDataPoints(const RoofData& data) {
+
+            // Colores definidos para cada conjunto de puntos
+            glm::vec3 polygonColor(1.0f, 1.0f, 1.0f);  // Rojo
+            glm::vec3 holeColor(0.0f, 1.0f, 0.0f);     // Verde
+            glm::vec3 expectedColor(1.0f, 1.0f, 0.0f); // Amarillo
+
+            // Pintar puntos del polígono
+            int pointCounter = 0;
+            for (const auto& point : data.polygon)
+            {
+                EngineOpenGL::GetInstance().CreatePrefabDot(glm::vec3(point.X, 0.0f, point.Y), polygonColor);
+                std::string pointInfo = std::to_string(pointCounter);
+                EngineOpenGL::GetInstance().freeTypeManager->RenderText(pointInfo, glm::vec3(point.X, 1.0f, point.Y), 1.009f, polygonColor);
+            }
+
+            // Crear líneas entre los puntos
+            for (size_t i = 0; i < data.polygon.size(); ++i) {
+                const auto& point1 = data.polygon[i];
+                const auto& point2 = data.polygon[(i + 1) % data.polygon.size()]; // Conectar el último punto con el primero
+                EngineOpenGL::GetInstance().CreatePrefabLine(glm::vec3(point1.X, 0.0f, point1.Y), glm::vec3(point2.X, 0.0f, point2.Y));
+            }
+
+            //// Pintar puntos del agujero
+            //for (const auto& point : data.hole) {
+            //	CreatePrefabDot(glm::vec3(point.X, 0.0f, point.Y), holeColor);
+            //}
+
+            // Pintar puntos de los agujeros (si hay múltiples)
+            for (const auto& hole : data.holes) {
+                for (const auto& point : hole) {
+                    EngineOpenGL::GetInstance().CreatePrefabDot(glm::vec3(point.X, 0.0f, point.Y), holeColor);
+                }
+            }
+            //
+            // Pintar puntos esperados
+            for (const auto& point : data.expected) {
+                EngineOpenGL::GetInstance().CreatePrefabDot(glm::vec3(point.X, 0.0f, point.Y), expectedColor);
+            }
+        }
+        void PaintSkeletonPoints(const Skeleton& skeleton) {
+
+            // Colores definidos para cada conjunto de puntos
+            glm::vec3 edgeColor(1.0f, 0.0f, 0.0f);     // Rojo
+            glm::vec3 distanceColor(0.0f, 1.0f, 0.0f); // Verde
+
+            // Pintar puntos de los Edges
+            if (skeleton.Edges) {
+                for (const auto& edgeResult : *skeleton.Edges) {
+                    if (edgeResult->Polygon) {
+                        for (size_t i = 0; i < edgeResult->Polygon->size(); ++i) {
+                            const auto& point = (*edgeResult->Polygon)[i];
+                            double height = skeleton.Distances->at(*point);
+                            EngineOpenGL::GetInstance().CreatePrefabDot(glm::vec3(point->X, height, point->Y), edgeColor);
+
+                            // Crear líneas entre los puntos
+                            const auto& nextPoint = (*edgeResult->Polygon)[(i + 1) % edgeResult->Polygon->size()];
+                            double nextHeight = skeleton.Distances->at(*nextPoint);
+                            EngineOpenGL::GetInstance().CreatePrefabLine(glm::vec3(point->X, height, point->Y), glm::vec3(nextPoint->X, nextHeight, nextPoint->Y));
+                        }
+                    }
+                }
+            }
+
+            // Pintar puntos de Distances
+            //if (skeleton.Distances) {
+            //	std::vector<glm::vec3> points;  // Almacenar los puntos en un vector para crear líneas más tarde
+
+            //	for (const auto& distancePair : *skeleton.Distances) {
+            //		const auto& point = distancePair.first;
+            //		double height = distancePair.second;
+            //		glm::vec3 point3D(point.X, height, point.Y);
+            //		CreatePrefabDot(point3D, distanceColor);
+            //		points.push_back(point3D);
+            //	}
+
+            //	// Crear líneas entre los puntos consecutivos
+            //	for (size_t i = 0; i < points.size(); ++i) {
+            //		const glm::vec3& point1 = points[i];
+            //		const glm::vec3& point2 = points[(i + 1) % points.size()];  // Conectar el último punto con el primero
+            //		CreatePrefabLine(point1, point2);
+            //	}
+            //}
+        }
+
+        void PaintRootDataLabels()
+        {
+            // Colores definidos para cada conjunto de puntos
+            glm::vec3 polygonColor(1.0f, 1.0f, 1.0f);  // Rojo
+            glm::vec3 holeColor(0.0f, 1.0f, 0.0f);     // Verde
+            glm::vec3 expectedColor(1.0f, 1.0f, 0.0f); // Amarillo
+
+            // Pintar puntos del polígono
+            int pointCounter = 0;
+            for (const auto& point : current_roofData.polygon)
+            {
+                std::string pointInfo = std::to_string(pointCounter);
+                EngineOpenGL::GetInstance().freeTypeManager->RenderText(pointInfo, glm::vec3(point.X, -0.5f, point.Y), 0.006f, polygonColor);
+                pointCounter++;
+            }
+
+            pointCounter = 0;
+            // Pintar puntos de los agujeros (si hay múltiples)
+            for (const auto& hole : current_roofData.holes) {
+                for (const auto& point : hole)
+                {
+                    pointCounter++;
+                }
+            }
+
+
+            pointCounter = 0;
+            // Pintar puntos esperados
+            for (const auto& point : current_roofData.expected)
+            {
+                pointCounter++;
+            }
+        }
+
+        
+
+        void PaintSkeletonLabels()
+        {
+            // Colores definidos para cada conjunto de puntos
+            glm::vec3 edgeColor(1.0f, 0.0f, 0.0f);     // Rojo
+            glm::vec3 distanceColor(0.0f, 1.0f, 0.0f); // Verde
+
+            // Mapa para agrupar puntos por posición
+            std::map<Vector2d, std::vector<int>, Vector2dComparator> pointMap;
+
+            // Agrupar los puntos por su posición y almacenar los índices
+            int pointCounter = 0;
+            if (current_sk->Edges) {
+                for (const auto& edgeResult : *current_sk->Edges) {
+                    if (edgeResult->Polygon) {
+                        for (const auto& point : *edgeResult->Polygon) {
+                            pointMap[*point].push_back(pointCounter);
+                            pointCounter++;
+                        }
+                    }
+                }
+            }
+
+            // Renderizar los textos agrupados
+            for (const auto& entry : pointMap) {
+                const Vector2d& point = entry.first;
+                const std::vector<int>& indices = entry.second;
+                double height = current_sk->Distances->at(point);
+
+                // Crear el texto con todos los índices
+                std::string pointInfo;
+                for (size_t i = 0; i < indices.size(); ++i) {
+                    pointInfo += std::to_string(indices[i]);
+                    if (i < indices.size() - 1) {
+                        pointInfo += ", ";
+                    }
+                }
+
+                // Renderizar el texto en la posición del punto
+                EngineOpenGL::GetInstance().freeTypeManager->RenderText(pointInfo, glm::vec3(point.X, height, point.Y), 0.003f, edgeColor);
+            }
+
+
+
+            pointCounter = 0;
+            // Pintar puntos de Distances
+            if (current_sk->Distances) {
+                for (const auto& distancePair : *current_sk->Distances) {
+                    const auto& point = distancePair.first;
+                    double height = distancePair.second;
+                    std::string pointInfo = std::to_string(pointCounter);
+                    EngineOpenGL::GetInstance().freeTypeManager->RenderText(pointInfo, glm::vec3(point.X, height + 0.2, point.Y), 0.006f, distanceColor);
+                    pointCounter++;
+                }
+            }
+        }
 
     private:
         static bool EqualEpsilon(double d1, double d2) {
@@ -318,6 +533,52 @@ namespace libCore {
 
             return indices;
         }
+
+
+        //HELPERS PARA EXTRUSION
+
+    // Función para calcular la normal a un segmento (p1, p2)
+        Vector2d calculateNormal(const Vector2d& p1, const Vector2d& p2)
+        {
+            Vector2d normal(p2.Y - p1.Y, -(p2.X - p1.X));
+            normal.Normalize();
+            return normal;
+        }
+
+        // Función para calcular la normal promedio para un punto en el polígono
+        Vector2d calculateAverageNormal(const std::vector<Vector2d>& points, size_t index)
+        {
+            size_t numPoints = points.size();
+            size_t prev = (index == 0) ? numPoints - 1 : index - 1;
+            size_t next = (index + 1) % numPoints;
+
+            Vector2d normalPrev = calculateNormal(points[prev], points[index]);
+            Vector2d normalNext = calculateNormal(points[index], points[next]);
+
+            Vector2d averageNormal = normalPrev + normalNext;
+            averageNormal.Normalize();
+            return averageNormal;
+        }
+
+        // Función para extruir un polígono
+        std::vector<Vector2d> extrudePolygon(const std::vector<Vector2d>& points, double extrusionDistance)
+        {
+            std::vector<Vector2d> extrudedPoints;
+            size_t numPoints = points.size();
+
+            for (size_t i = 0; i < numPoints; ++i)
+            {
+                Vector2d averageNormal = calculateAverageNormal(points, i);
+
+                // Extruir los puntos
+                Vector2d extrudedPoint = points[i] + averageNormal * extrusionDistance;
+                extrudedPoints.push_back(extrudedPoint);
+            }
+
+            return extrudedPoints;
+        }
+
+        
     };
 }
 
