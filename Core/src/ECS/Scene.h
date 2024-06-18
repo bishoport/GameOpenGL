@@ -8,6 +8,7 @@ private:
 	
 	entt::entity EntityCreator(Ref<libCore::ModelContainer> modelContainer, std::string nameEntity = "");
 
+	void CreateTagsAndLayers();
 
 public:
 
@@ -34,4 +35,6 @@ public:
 
 	void CreateCube();
 	void CreateSphere(float radius = 6, unsigned int sectorCount  = 1 , unsigned int stackCount = 1);
+
+
 };

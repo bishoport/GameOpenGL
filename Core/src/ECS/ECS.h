@@ -5,8 +5,9 @@ namespace libCore
     struct EntityInfo {
         std::string name;
         //tag
+        unsigned indexTag;
         // layer
-
+        unsigned indexLayer;
     };
 
     struct Transform {

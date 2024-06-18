@@ -210,18 +210,32 @@ namespace libCore
             std::string nameEntity = EntityManager::GetInstance().m_registry.get<libCore::EntityInfo>(newEntity).name;
 
             if (ImGui::TreeNode(&newEntity, nameEntity.c_str())) {
+
+                if (EntityManager::GetInstance().m_registry.has<libCore::EntityInfo>(newEntity)) {
+                    if (ImGui::TreeNode(&EntityManager::GetInstance().m_registry.get<libCore::EntityInfo>(newEntity), "Entity")) {
+                        ImGui::BulletText("Entity Customization");
+                        ImGui::InputText("Name:", &EntityManager::GetInstance().m_registry.get<libCore::EntityInfo>(newEntity).name);
+                        const char* items[] = { "Opcion 1", "Opcion 2", "Opcion 3" };
+                        static int tagIdx = EntityManager::GetInstance().m_registry.get<libCore::EntityInfo>(newEntity).indexTag;
+                        ImGui::Combo("Tag System", &tagIdx, items, IM_ARRAYSIZE(items));
+                        EntityManager::GetInstance().m_registry.get<libCore::EntityInfo>(newEntity).indexTag = tagIdx;
+                        static int layerIdx = EntityManager::GetInstance().m_registry.get<libCore::EntityInfo>(newEntity).indexLayer;
+                        ImGui::Combo("Layer System", &layerIdx, items, IM_ARRAYSIZE(items));
+                        EntityManager::GetInstance().m_registry.get<libCore::EntityInfo>(newEntity).indexLayer = layerIdx;
+
+                        ImGui::TreePop();
+                    }
+                }
+
                 if (EntityManager::GetInstance().m_registry.has<Transform>(newEntity)) {
                     for (int j = 0; j < modelContainer->models.size(); j++) {
                         if (ImGui::TreeNode(modelContainer->models[j].get(), "Child: %d", j)) {
                             // Aqu� listamos las Meshes de cada Model
                             auto& model = modelContainer->models[j];
-                            for (int k = 0; k < model->meshes.size(); k++) {
-                                ImGui::BulletText("Mesh: %s", model->meshes[k]->meshName.c_str());
-                                ImGui::BulletText("Transform:");
-                                ImGui::DragFloat3("Position", &model->transform.position[0], 0.1f);
-                                ImGui::DragFloat3("Rotation", &model->transform.rotation[0], 0.01f, -3.14159f, 3.14159f, "%.3f rad");
-                                ImGui::DragFloat3("Scale", &model->transform.scale[0], 0.1f, 0.01f, 100.0f, "%.3f");
-                            }
+                            ImGui::BulletText("Transform:");
+                            ImGui::DragFloat3("Position", &model->transform.position[0], 0.1f);
+                            ImGui::DragFloat3("Rotation", &model->transform.rotation[0], 0.01f, -3.14159f, 3.14159f, "%.3f rad");
+                            ImGui::DragFloat3("Scale", &model->transform.scale[0], 0.1f, 0.01f, 100.0f, "%.3f");
                             ImGui::TreePop(); // Finaliza el nodo del Model
                         }
                     }
@@ -230,7 +244,7 @@ namespace libCore
                 if (EntityManager::GetInstance().m_registry.has<libCore::Renderer>(newEntity)) {
                     if (ImGui::TreeNode(&EntityManager::GetInstance().m_registry.get<libCore::Renderer>(newEntity), "Renderer"))
                     {
-                        ImGui::BulletText("TESTING");
+                        ImGui::BulletText("Renderer");
                         ImGui::Checkbox("Render Bounding Box", &EntityManager::GetInstance().m_registry.get<libCore::Renderer>(newEntity).modelContainerData->isBoundingBox);
                         ImGui::Checkbox("Don't Draw", &EntityManager::GetInstance().m_registry.get<libCore::Renderer>(newEntity).modelContainerData->isDontDraw);
 
