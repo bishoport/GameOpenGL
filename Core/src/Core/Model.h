@@ -27,6 +27,7 @@ namespace libCore
         int& GetBoneCount() { return m_BoneCounter; }
 
         bool isBB;
+        bool stopDrawingBool;
 
         //--METHODS
         void Draw(const std::string& shader);

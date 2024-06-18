@@ -38,7 +38,7 @@ void Scene::BeginPlay()
 	//EntityCreator(libCore::EngineOpenGL::GetInstance().CreatePrefabCube(), "Bounding Box");
 
 	CreateCube();
-	CreateSphere();
+	CreateSphere(100, 100, 100);
 }
 
 

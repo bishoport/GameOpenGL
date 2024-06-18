@@ -23,7 +23,7 @@ namespace libCore
 		for (unsigned int i = 0; i < meshes.size(); i++)
 		{
 			libCore::ShaderManager::Get(shader)->setMat4("model", transform.getMatrix());
-			if(!meshes[i]->isBB || isBB)
+			if(!meshes[i]->isBB && !stopDrawingBool || isBB && meshes[i]->isBB)
 				meshes[i]->Draw();
 		}
 	}

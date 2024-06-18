@@ -523,6 +523,65 @@ namespace libCore
 
 		return modelContainer;
 	}
+
+	std::vector<glm::vec3> EngineOpenGL::maxMinBounds(std::vector<glm::vec3> vertices, glm::mat4 model) {
+		glm::vec3 boundingBoxMin = glm::vec3(std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+		glm::vec3 boundingBoxMax = glm::vec3(-std::numeric_limits<float>::max(), -std::numeric_limits<float>::max(), -std::numeric_limits<float>::max());
+
+		//Bounding Box
+		
+		for (unsigned int i = 0; i < vertices.size(); i += 1) {
+				// Get the coordinates of the current vertex
+			GLfloat x = vertices[i].x;
+			GLfloat y =	vertices[i].y;
+			GLfloat z =	vertices[i].z;
+			glm::vec4 vertex = model * glm::vec4(x, y, z, 1.f);
+				// Update the minimum and maximum values of the bounding box
+			boundingBoxMin.x = std::min(boundingBoxMin.x, vertex.x);
+			boundingBoxMin.y = std::min(boundingBoxMin.y, vertex.y);
+			boundingBoxMin.z = std::min(boundingBoxMin.z, vertex.z);
+
+			boundingBoxMax.x = std::max(boundingBoxMax.x, vertex.x);
+			boundingBoxMax.y = std::max(boundingBoxMax.y, vertex.y);
+			boundingBoxMax.z = std::max(boundingBoxMax.z, vertex.z);
+		}
+
+		std::vector<glm::vec3> vertMaxMin = {
+			{boundingBoxMin.x, boundingBoxMin.y, boundingBoxMin.z},
+			{boundingBoxMax.x, boundingBoxMin.y, boundingBoxMin.z},
+			{boundingBoxMax.x, boundingBoxMin.y, boundingBoxMax.z},
+			{boundingBoxMin.x, boundingBoxMin.y, boundingBoxMax.z},
+			{boundingBoxMin.x, boundingBoxMax.y, boundingBoxMin.z},
+			{boundingBoxMax.x, boundingBoxMax.y, boundingBoxMin.z},
+			{boundingBoxMax.x, boundingBoxMax.y, boundingBoxMax.z},
+			{boundingBoxMin.x, boundingBoxMax.y, boundingBoxMax.z},
+		};
+
+		return vertMaxMin;
+		
+	}
+	glm::vec3 EngineOpenGL::centerBounds(glm::vec3 max, glm::vec3 min) {
+		glm::vec3 center;
+		center.x = (max.x + min.x) / 2.0f;
+		center.y = (max.y + min.y) / 2.0f;
+		center.z = (max.z + min.z) / 2.0f;
+
+		return center;
+	}
+	std::vector<glm::vec3> EngineOpenGL::convertVertexToVector(std::vector<Vertex> vertexList) {
+		unsigned vertSize = vertexList.size();
+		std::vector<glm::vec3> coordsList(vertSize);
+		for (unsigned i = 0; i < vertexList.size(); i++) {
+			glm::vec3 coords;
+			coords.x = vertexList[i].position.x;
+			coords.y = vertexList[i].position.y;
+			coords.z = vertexList[i].position.z;
+			coordsList[i] = coords;
+		}
+
+		return coordsList;
+	}
+	
 	Ref<libCore::ModelContainer> EngineOpenGL::CreatePrefabDot(const glm::vec3& pos, const glm::vec3& polygonColor)
 	{
 		auto modelContainer = CreateRef<ModelContainer>();
@@ -531,9 +590,10 @@ namespace libCore
 		auto modelBuild = CreateRef<Model>();
 		modelBuild->transform.position = pos;
 		modelContainer->name = "PRIMITIVE_DOT";
-		modelBuild->meshes.push_back(PrimitivesHelper::CreateDot());
-		modelBuild->meshes.push_back(PrimitivesHelper::CreateBoundingBox());
+		Ref<Mesh> mesh = PrimitivesHelper::CreateDot();
+		modelBuild->meshes.push_back(mesh);
 
+		modelBuild->meshes.push_back(PrimitivesHelper::CreateBoundingBox(maxMinBounds(convertVertexToVector(mesh->vertices), modelBuild->transform.getMatrix())));
 		//--DEFAULT_MATERIAL
 		auto material = CreateRef<Material>();
 		material->materialName = "default_material";
@@ -595,8 +655,10 @@ namespace libCore
 
 
 		modelContainer->name = "PRIMIVITE_SPHERE";
-		modelBuild->meshes.push_back(PrimitivesHelper::CreateSphere(0.01f, 6, 6));
-		modelBuild->meshes.push_back(PrimitivesHelper::CreateBoundingBox());
+		Ref<Mesh> mesh = PrimitivesHelper::CreateSphere(0.01f, 6, 6);
+
+		modelBuild->meshes.push_back(mesh);
+		modelBuild->meshes.push_back(PrimitivesHelper::CreateBoundingBox(maxMinBounds(convertVertexToVector(mesh->vertices), modelBuild->transform.getMatrix())));
 
 		modelContainer->models.push_back(modelBuild);
 
@@ -629,8 +691,11 @@ namespace libCore
 		auto modelBuild = CreateRef<Model>();
 
 		modelContainer->name = "PRIMIVITE_CUBE";
-		modelBuild->meshes.push_back(PrimitivesHelper::CreateCube());
-		
+		Ref<Mesh> mesh = PrimitivesHelper::CreateCube();
+
+		modelBuild->meshes.push_back(mesh);
+		modelBuild->meshes.push_back(PrimitivesHelper::CreateBoundingBox(maxMinBounds(convertVertexToVector(mesh->vertices), modelBuild->transform.getMatrix())));
+
 
 		//--DEFAULT_MATERIAL
 		auto material = CreateRef<Material>();

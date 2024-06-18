@@ -232,6 +232,8 @@ namespace libCore
                     {
                         ImGui::BulletText("TESTING");
                         ImGui::Checkbox("Render Bounding Box", &EntityManager::GetInstance().m_registry.get<libCore::Renderer>(newEntity).modelContainerData->isBoundingBox);
+                        ImGui::Checkbox("Don't Draw", &EntityManager::GetInstance().m_registry.get<libCore::Renderer>(newEntity).modelContainerData->isDontDraw);
+
                         ImGui::TreePop();
                     }
                 }

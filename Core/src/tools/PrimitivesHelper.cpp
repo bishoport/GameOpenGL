@@ -273,47 +273,61 @@ namespace libCore {
         return mesh;
     }
 
-    Ref<Mesh> PrimitivesHelper::CreateBoundingBox()
+    std::vector<GLfloat> PrimitivesHelper::convertvectorToGLFloat(std::vector<glm::vec3> vertPos) {
+        unsigned vertSize = vertPos.size() * 3;
+        std::vector<GLfloat> vertices(vertSize, 0);
+        unsigned indexPos = 0;
+        for (unsigned i = 0; i < vertSize; i+= 3) {
+            vertices[i] = vertPos[indexPos].x;
+            vertices[i+1] = vertPos[indexPos].y;
+            vertices[i + 2] = vertPos[indexPos].z;
+            indexPos += 1;
+        }
+        return vertices;
+    }
+
+    Ref<Mesh> PrimitivesHelper::CreateBoundingBox(std::vector<glm::vec3> vertPos)
     {
         auto mesh = CreateRef<Mesh>();
+        std::vector<GLfloat> vertices = convertvectorToGLFloat(vertPos);
         //Otra opcion. Pintar con lineas, unir 
-        std::vector<GLfloat> vertices = {
-            // Cara delantera
-           -0.5f,  0.5f,  0.5f,  
-           -0.5f, -0.5f,  0.5f, 
-            0.5f, -0.5f,  0.5f,  
-            0.5f,  0.5f,  0.5f,
+        //std::vector<GLfloat> vertices = {
+        //    // Cara delantera
+        //   -0.5f,  0.5f,  0.5f,  
+        //   -0.5f, -0.5f,  0.5f, 
+        //    0.5f, -0.5f,  0.5f,  
+        //    0.5f,  0.5f,  0.5f,
 
-            // Cara trasera
-            -0.5f,  0.5f, -0.5f, 
-            -0.5f, -0.5f, -0.5f, 
-             0.5f, -0.5f, -0.5f, 
-             0.5f,  0.5f, -0.5f, 
+        //    // Cara trasera
+        //    -0.5f,  0.5f, -0.5f, 
+        //    -0.5f, -0.5f, -0.5f, 
+        //     0.5f, -0.5f, -0.5f, 
+        //     0.5f,  0.5f, -0.5f, 
 
-             // Cara izquierda
-             -0.5f,  0.5f, -0.5f, 
-             -0.5f, -0.5f, -0.5f, 
-             -0.5f, -0.5f,  0.5f, 
-             -0.5f,  0.5f,  0.5f,  
+        //     // Cara izquierda
+        //     -0.5f,  0.5f, -0.5f, 
+        //     -0.5f, -0.5f, -0.5f, 
+        //     -0.5f, -0.5f,  0.5f, 
+        //     -0.5f,  0.5f,  0.5f,  
 
-             // Cara derecha
-              0.5f,  0.5f, -0.5f,
-              0.5f, -0.5f, -0.5f, 
-              0.5f, -0.5f,  0.5f,
-              0.5f,  0.5f,  0.5f, 
+        //     // Cara derecha
+        //      0.5f,  0.5f, -0.5f,
+        //      0.5f, -0.5f, -0.5f, 
+        //      0.5f, -0.5f,  0.5f,
+        //      0.5f,  0.5f,  0.5f, 
 
-              // Cara superior
-              -0.5f,  0.5f, -0.5f, 
-              -0.5f,  0.5f,  0.5f, 
-               0.5f,  0.5f,  0.5f, 
-               0.5f,  0.5f, -0.5f, 
+        //      // Cara superior
+        //      -0.5f,  0.5f, -0.5f, 
+        //      -0.5f,  0.5f,  0.5f, 
+        //       0.5f,  0.5f,  0.5f, 
+        //       0.5f,  0.5f, -0.5f, 
 
-               // Cara inferior
-               -0.5f, -0.5f, -0.5f,
-               -0.5f, -0.5f,  0.5f,
-                0.5f, -0.5f,  0.5f, 
-                0.5f, -0.5f, -0.5f
-        };
+        //       // Cara inferior
+        //       -0.5f, -0.5f, -0.5f,
+        //       -0.5f, -0.5f,  0.5f,
+        //        0.5f, -0.5f,  0.5f, 
+        //        0.5f, -0.5f, -0.5f
+        //};
 
 
         std::vector<GLuint> indices = {
@@ -344,6 +358,7 @@ namespace libCore {
         }
         mesh->indices = indices;
         mesh->drawLike = DRAW_GEOM_LIKE::LINES;
+        mesh->isBB = true;
         mesh->SetupMesh();
 
         return mesh;

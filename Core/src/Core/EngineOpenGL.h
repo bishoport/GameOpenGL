@@ -66,6 +66,9 @@ namespace libCore
         FreeTypeManager* freeTypeManager = nullptr;
 
     private:
+        std::vector<glm::vec3> maxMinBounds(std::vector<glm::vec3> vertices, glm::mat4 model);
+        glm::vec3 centerBounds(glm::vec3 max, glm::vec3 min);
+        std::vector<glm::vec3> convertVertexToVector(std::vector<Vertex> vertexList);
         bool m_wireframe = false;
 
         std::vector<Ref<libCore::ModelContainer>> modelsInScene;

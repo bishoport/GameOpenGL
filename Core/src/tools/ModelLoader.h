@@ -32,11 +32,13 @@ namespace libCore
 		std::vector<Ref<Model>> models;
 		bool skeletal = false;
 		bool isBoundingBox;
+		bool isDontDraw;
 		void Draw(const std::string& shader)
 		{
 			for (auto& model : models)
 			{
 				model->isBB = isBoundingBox;
+				model->stopDrawingBool = isDontDraw;
 				model->Draw(shader);
 				
 			}
