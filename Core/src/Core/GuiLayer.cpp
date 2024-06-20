@@ -215,12 +215,23 @@ namespace libCore
                     if (ImGui::TreeNode(&EntityManager::GetInstance().m_registry.get<libCore::EntityInfo>(newEntity), "Entity")) {
                         ImGui::BulletText("Entity Customization");
                         ImGui::InputText("Name:", &EntityManager::GetInstance().m_registry.get<libCore::EntityInfo>(newEntity).name);
-                        const char* items[] = { "Opcion 1", "Opcion 2", "Opcion 3" };
+                       
                         static int tagIdx = EntityManager::GetInstance().m_registry.get<libCore::EntityInfo>(newEntity).indexTag;
-                        ImGui::Combo("Tag System", &tagIdx, items, IM_ARRAYSIZE(items));
+                        std::vector<const char*> arrayTag;
+                        for (unsigned i = 0; i < Scene::GetInstance().tags.size(); i++) {
+                            arrayTag.push_back(Scene::GetInstance().tags[i].c_str());
+                        }
+                        ImGui::Combo("Tag System", &tagIdx, arrayTag.data(), arrayTag.size());
+
                         EntityManager::GetInstance().m_registry.get<libCore::EntityInfo>(newEntity).indexTag = tagIdx;
+
+
                         static int layerIdx = EntityManager::GetInstance().m_registry.get<libCore::EntityInfo>(newEntity).indexLayer;
-                        ImGui::Combo("Layer System", &layerIdx, items, IM_ARRAYSIZE(items));
+                        std::vector<const char*> arrayLayers;
+                        for (unsigned i = 0; i < Scene::GetInstance().layers.size(); i++) {
+                            arrayLayers.push_back(Scene::GetInstance().layers[i].c_str());
+                        }
+                        ImGui::Combo("Layer System", &layerIdx, arrayLayers.data(), arrayLayers.size());
                         EntityManager::GetInstance().m_registry.get<libCore::EntityInfo>(newEntity).indexLayer = layerIdx;
 
                         ImGui::TreePop();

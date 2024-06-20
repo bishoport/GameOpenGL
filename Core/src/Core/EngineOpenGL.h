@@ -10,6 +10,7 @@
 #include "../StraightSkeleton/Vector2d.h"
 #include "../tools/FreeTypeManager.h"
 #include "../ECS/Scene.h"
+#include "nlohmann/json.hpp"
 namespace libCore
 {
     //class GuiLayer;

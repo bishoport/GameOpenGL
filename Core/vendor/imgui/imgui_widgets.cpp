@@ -1944,7 +1944,6 @@ bool ImGui::Combo(const char* label, int* current_item, const char* (*getter)(vo
 
     return value_changed;
 }
-
 // Combo box helper allowing to pass an array of strings.
 bool ImGui::Combo(const char* label, int* current_item, const char* const items[], int items_count, int height_in_items)
 {

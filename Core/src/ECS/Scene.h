@@ -10,8 +10,13 @@ private:
 
 	void CreateTagsAndLayers();
 
+	std::string const jsonFile = "C:/Users/migue/Desktop/Projects/GameOpenGL/Core/assets/data/tagsAndLayers.json";
+	
+
 public:
 
+	std::vector<std::string> tags;
+	std::vector<std::string> layers;
 
 	RenderSystem systemRender;
 

@@ -37,7 +37,7 @@ void Scene::BeginPlay()
 	/*Ref<libCore::ModelContainer> modelContainer = libCore::EngineOpenGL::GetInstance().CreateRoof();
 	EntityCreator(modelContainer, "Roof 3");*/
 	//EntityCreator(libCore::EngineOpenGL::GetInstance().CreatePrefabCube(), "Bounding Box");
-
+	CreateTagsAndLayers();
 	CreateCube();
 	CreateSphere(100, 100, 100);
 }
@@ -60,34 +60,15 @@ void Scene::CreateSphere(float radius, unsigned int sectorCount, unsigned int st
 
 void Scene::CreateTagsAndLayers()
 {
+	std::ifstream file;
+
+	file.open(jsonFile);
+	nlohmann::json jsonData; 
+	if (!file.is_open()) {
+		std::cout << "Can not open the file" << std::endl;
+		return;
+	}
+	file >> jsonData;
+	tags = jsonData["tag"].get<std::vector<std::string>>();
+	layers = jsonData["layer"].get<std::vector<std::string>>();
 }
-//Pseudo codigo
-//int main() {
-//	// Abrir el archivo JSON
-//	std::ifstream file("tags_layers.json");
-//	if (!file.is_open()) {
-//		std::cerr << "No se pudo abrir el archivo JSON." << std::endl;
-//		return 1;
-//	}
-//
-//	// Parsear el archivo JSON
-//	json j;
-//	file >> j;
-//
-//	// Obtener los arrays de tags y layers
-//	std::vector<std::string> tags = j["tag"].get<std::vector<std::string>>();
-//	std::vector<std::string> layers = j["layer"].get<std::vector<std::string>>();
-//
-//	// Imprimir los valores obtenidos
-//	std::cout << "Tags:" << std::endl;
-//	for (const auto& tag : tags) {
-//		std::cout << tag << std::endl;
-//	}
-//
-//	std::cout << "Layers:" << std::endl;
-//	for (const auto& layer : layers) {
-//		std::cout << layer << std::endl;
-//	}
-//
-//	return 0;
-//}
