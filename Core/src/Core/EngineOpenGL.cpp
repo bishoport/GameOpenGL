@@ -740,6 +740,7 @@ namespace libCore
 		if (useImGUI)
 		{
 			guiLayer->DrawHierarchyPanel(Scene::GetInstance().modelsInScene);
+			guiLayer->SelectCurrentGizmoObject(Scene::GetInstance().modelsInScene, *viewportManager->viewports[0]->camera);
 			guiLayer->DrawLightsPanel(lights);
 			//guiLayer->RenderCheckerMatrix(); //Panel para el editor de roofs
 		}

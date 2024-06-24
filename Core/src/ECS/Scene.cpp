@@ -50,7 +50,7 @@ void Scene::Tick(float DeltaTime)
 
 void Scene::CreateCube()
 {
-	EntityCreator(libCore::EngineOpenGL::GetInstance().CreatePrefabCube(), "");
+	EntityCreator(libCore::EngineOpenGL::GetInstance().CreatePrefabCube(), "Guts");
 }
 
 void Scene::CreateSphere(float radius, unsigned int sectorCount, unsigned int stackCount)

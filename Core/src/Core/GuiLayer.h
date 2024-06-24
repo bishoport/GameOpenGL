@@ -11,11 +11,11 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 #include "imgui/imgui_stdlib.h"
+#include "imgui/ImGuizmo.h"
 #include "../Timestep.h"
 #include "../tools/Camera.h"
 #include "Viewport.hpp"
 #include "../StraightSkeleton/Vector2d.h"
-
 namespace libCore
 {
     class GuiLayer {
@@ -38,12 +38,16 @@ namespace libCore
 
 		//Panels
 		void DrawHierarchyPanel(const std::vector<Ref<libCore::ModelContainer>>& modelsInScene);
+        void SelectCurrentGizmoObject(const std::vector<Ref<libCore::ModelContainer>>& modelsInScene, libCore::Camera camera);
+        void DrawGizmos(entt::entity& entity, libCore::Camera camera, Ref<libCore::ModelContainer> modelContainer);
         void DrawLightsPanel(const std::vector<Ref<libCore::Light>>& lightsInScene);
 
         void RenderCheckerMatrix();
 
     private:
 
+      /*  Ref<IGizmo> gizmo;
+        Ref<IGizmo> gizmoMove, gizmoRotate, gizmoScale;*/
         CallbackFromGuiLayer m_callbackFromGuiLayerFunc;
         std::vector<std::pair<int, int>> selectedOrder;
         bool ini_file_exists;

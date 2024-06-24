@@ -74,6 +74,12 @@ namespace libCore
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+
+    /*    gizmoMove = Ref<IGizmo>(CreateMoveGizmo());
+        gizmoRotate = Ref<IGizmo>(CreateRotateGizmo());
+        gizmoScale = Ref<IGizmo>(CreateScaleGizmo());
+
+        gizmo = gizmoMove;*/
     }
 
     void GuiLayer::renderDockers()
@@ -224,8 +230,6 @@ namespace libCore
                         ImGui::Combo("Tag System", &tagIdx, arrayTag.data(), arrayTag.size());
 
                         EntityManager::GetInstance().m_registry.get<libCore::EntityInfo>(newEntity).indexTag = tagIdx;
-
-
                         static int layerIdx = EntityManager::GetInstance().m_registry.get<libCore::EntityInfo>(newEntity).indexLayer;
                         std::vector<const char*> arrayLayers;
                         for (unsigned i = 0; i < Scene::GetInstance().layers.size(); i++) {
@@ -267,6 +271,43 @@ namespace libCore
             }
         }
         ImGui::End();
+    }
+
+    void GuiLayer::SelectCurrentGizmoObject(const std::vector<Ref<libCore::ModelContainer>>& modelsInScene, libCore::Camera camera)
+    {
+        for (auto& modelContainer : modelsInScene) {
+
+            entt::entity newEntity = Scene::GetInstance().entitiesDictionary[modelContainer->entityIdentifier];
+            std::string nameEntity = EntityManager::GetInstance().m_registry.get<libCore::EntityInfo>(newEntity).name;
+            if (EntityManager::GetInstance().m_registry.has<Transform>(newEntity)) {
+                if (nameEntity == "Guts") {
+                    DrawGizmos(newEntity, camera, modelContainer);
+                }
+            }
+           
+        }
+    }
+
+    void GuiLayer::DrawGizmos(entt::entity& entity, libCore::Camera camera, Ref<libCore::ModelContainer> modelContainer)
+    {
+        ImGuizmo::SetOrthographic(false);
+        ImGuizmo::SetDrawlist();
+
+        float windowWidth = ImGui::GetIO().DisplaySize.x;
+        float windowHeight = ImGui::GetIO().DisplaySize.y;
+        ImGuizmo::SetRect(0, 0, windowWidth, windowHeight);
+        glm::mat4 transformComp = EntityManager::GetInstance().m_registry.get<libCore::Transform>(entity).getMatrix();
+        ImGuizmo::Manipulate(glm::value_ptr(camera.view), glm::value_ptr(camera.projection),
+         ImGuizmo::ROTATE, ImGuizmo::LOCAL, glm::value_ptr(transformComp));
+
+        for (unsigned i = 0; i < modelContainer->models.size(); i++) {
+            modelContainer->models[i]->transform.position = EntityManager::GetInstance().m_registry.get<libCore::Transform>(entity).position;
+           modelContainer->models[i]->transform.rotation = EntityManager::GetInstance().m_registry.get<libCore::Transform>(entity).rotation;
+            modelContainer->models[i]->transform.scale = EntityManager::GetInstance().m_registry.get<libCore::Transform>(entity).scale;
+        }
+
+        EntityManager::GetInstance().m_registry.get<libCore::Transform>(entity).setMatrix(transformComp);
+
     }
 
     void GuiLayer::DrawLightsPanel(const std::vector<Ref<libCore::Light>>& lightsInScene)
