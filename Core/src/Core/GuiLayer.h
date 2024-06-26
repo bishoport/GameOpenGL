@@ -38,6 +38,7 @@ namespace libCore
 
 		//Panels
 		void DrawHierarchyPanel(const std::vector<Ref<libCore::ModelContainer>>& modelsInScene);
+        void GizmosBasicButtons();
         void SelectCurrentGizmoObject(const std::vector<Ref<libCore::ModelContainer>>& modelsInScene, libCore::Camera camera);
         void DrawGizmos(entt::entity& entity, libCore::Camera camera, Ref<libCore::ModelContainer> modelContainer);
         void DrawLightsPanel(const std::vector<Ref<libCore::Light>>& lightsInScene);
@@ -45,7 +46,7 @@ namespace libCore
         void RenderCheckerMatrix();
 
     private:
-
+        ImGuizmo::OPERATION currentOperation = ImGuizmo::OPERATION::TRANSLATE;
       /*  Ref<IGizmo> gizmo;
         Ref<IGizmo> gizmoMove, gizmoRotate, gizmoScale;*/
         CallbackFromGuiLayer m_callbackFromGuiLayerFunc;

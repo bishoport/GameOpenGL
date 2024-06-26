@@ -18,7 +18,6 @@ namespace libCore
         glm::vec3 scale;
         glm::vec3 direction = glm::vec3(1.0f, 1.0f, 1.0f);
         glm::quat quaternion;
-
         Transform()
             : position(0.0f, 0.0f, 0.0f),
               rotation(0.0f, 0.0f, 0.0f),
@@ -40,6 +39,20 @@ namespace libCore
             rotation = glm::eulerAngles(quaternion);
             std::cout << "ROTATION " << std::endl;
         }*/
+        glm::vec3 quaternionToEuler(const glm::quat& quat)
+        {
+            // Convierte el quaternion a una matriz de rotación
+            glm::mat4 rotationMatrix = glm::toMat4(quat);
+
+            // Extrae los ángulos de Euler de la matriz de rotación
+            glm::vec3 eulerAngles = glm::eulerAngles(quat);
+
+            // Convertir los ángulos de Euler de radianes a grados
+            eulerAngles = glm::degrees(eulerAngles);
+
+            return eulerAngles;
+        }
+
 
         void setMatrix(const glm::mat4& matrix) {
             glm::vec3 newPos = glm::vec3(matrix[3]);
@@ -60,44 +73,24 @@ namespace libCore
             if (newScale.z) rows[2] /= newScale.z;
 
             // Extraer la rotación
-            glm::mat3 rotationMatrix(
-                rows[0][0], rows[0][1], rows[0][2],
-                rows[1][0], rows[1][1], rows[1][2],
-                rows[2][0], rows[2][1], rows[2][2]
-            );
-
+            glm::mat3 rotationMatrix(matrix);
+            quaternion = glm::quat_cast(rotationMatrix);
           //  glm::vec3 baseVector = glm::vec3(1.0f, 0.0f, 0.0f); // Vector en la dirección X
-            glm::quat rotationQuat = glm::quat_cast(rotationMatrix);
-            rotationQuat = reeestructureQuaternion(rotationQuat);
-            glm::quat restQuat = rotationQuat - quaternion;
-            std::cout << "OLO" << std::endl;
-            if (rotationQuat != quaternion) {
-                glm::vec3 newRotation = glm::eulerAngles(rotationQuat);
-                quaternion = rotationQuat;
-                rotation = newRotation;
-            }
-        
-
+            rotation = quaternionToEuler(glm::quat_cast(rotationMatrix));
+            rotation = glm::vec3(glm::radians(rotation.x), glm::radians(rotation.y), glm::radians(rotation.z));
             position = newPos;
 
 
             scale = newScale;
-        }
+        }       
        
-        glm::quat reeestructureQuaternion(glm::quat quat) {
-            quat.x = std::floor(quat.x * 100) / 100;
-            quat.y = std::floor(quat.y * 100) / 100;
-            quat.z = std::floor(quat.z * 100) / 100;
-            quat.w = std::floor(quat.w * 100) / 100;
-            return quat;
-        }
 
         glm::mat4 getMatrix() const {
             glm::mat4 mat = glm::mat4(1.0f);
             mat = glm::translate(mat, position);
-            mat = glm::rotate(mat, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-            mat = glm::rotate(mat, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-            mat = glm::rotate(mat, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+            glm::quat toQuat = glm::quat(glm::vec3(rotation.x,rotation.y, rotation.z));
+            mat *= glm::toMat4(toQuat);
+
             mat = glm::scale(mat, scale);
             return mat;
         }

@@ -273,6 +273,27 @@ namespace libCore
         ImGui::End();
     }
 
+    void GuiLayer::GizmosBasicButtons()
+    {
+        ImGui::SetNextWindowPos(ImVec2(1080, 720), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowBgAlpha(0.0f);
+        ImGui::Begin("Main Window", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBackground);
+        if (ImGui::Button("Translation")) {
+            currentOperation = ImGuizmo::OPERATION::TRANSLATE;
+        }
+        ImGui::SameLine();
+
+        if (ImGui::Button("Rotation")) {
+            currentOperation = ImGuizmo::OPERATION::ROTATE;
+        }
+        ImGui::SameLine();
+
+        if (ImGui::Button("Scale")) {
+            currentOperation = ImGuizmo::OPERATION::SCALE;
+        }
+        ImGui::End();
+    }
+
     void GuiLayer::SelectCurrentGizmoObject(const std::vector<Ref<libCore::ModelContainer>>& modelsInScene, libCore::Camera camera)
     {
         for (auto& modelContainer : modelsInScene) {
@@ -298,15 +319,20 @@ namespace libCore
         ImGuizmo::SetRect(0, 0, windowWidth, windowHeight);
         glm::mat4 transformComp = EntityManager::GetInstance().m_registry.get<libCore::Transform>(entity).getMatrix();
         ImGuizmo::Manipulate(glm::value_ptr(camera.view), glm::value_ptr(camera.projection),
-         ImGuizmo::ROTATE, ImGuizmo::LOCAL, glm::value_ptr(transformComp));
+         currentOperation, ImGuizmo::WORLD, glm::value_ptr(transformComp));
 
-        for (unsigned i = 0; i < modelContainer->models.size(); i++) {
-            modelContainer->models[i]->transform.position = EntityManager::GetInstance().m_registry.get<libCore::Transform>(entity).position;
-           modelContainer->models[i]->transform.rotation = EntityManager::GetInstance().m_registry.get<libCore::Transform>(entity).rotation;
-            modelContainer->models[i]->transform.scale = EntityManager::GetInstance().m_registry.get<libCore::Transform>(entity).scale;
+
+        if (transformComp != EntityManager::GetInstance().m_registry.get<libCore::Transform>(entity).getMatrix()) {
+            EntityManager::GetInstance().m_registry.get<libCore::Transform>(entity).setMatrix(transformComp);
+
+            for (unsigned i = 0; i < modelContainer->models.size(); i++) {
+                modelContainer->models[i]->transform.position = EntityManager::GetInstance().m_registry.get<libCore::Transform>(entity).position;
+                modelContainer->models[i]->transform.rotation = EntityManager::GetInstance().m_registry.get<libCore::Transform>(entity).rotation;
+                modelContainer->models[i]->transform.scale = EntityManager::GetInstance().m_registry.get<libCore::Transform>(entity).scale;
+            }
+
         }
-
-        EntityManager::GetInstance().m_registry.get<libCore::Transform>(entity).setMatrix(transformComp);
+     
 
     }
 
