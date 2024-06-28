@@ -17,4 +17,13 @@ public:
 			glm::vec3(1.0f)
 		);
 	}
+
+	entt::entity* allTheEntities() {
+		auto view = m_registry.view<>(); // Vista de todas las entidades
+		std::vector<entt::entity> entitesList;
+		for (auto entity : view) {
+			entitesList.push_back(entity);
+		}
+		return entitesList.data();
+	}
 };

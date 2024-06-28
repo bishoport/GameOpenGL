@@ -273,11 +273,11 @@ namespace libCore
         ImGui::End();
     }
 
-    void GuiLayer::GizmosBasicButtons()
+    void GuiLayer::GizmosBasicButtons(float width, float height)
     {
-        ImGui::SetNextWindowPos(ImVec2(1080, 720), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowPos(ImVec2(width / 20, height / 20), ImGuiCond_Always);
         ImGui::SetNextWindowBgAlpha(0.0f);
-        ImGui::Begin("Main Window", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBackground);
+        ImGui::Begin("Main Window", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoResize);
         if (ImGui::Button("Translation")) {
             currentOperation = ImGuizmo::OPERATION::TRANSLATE;
         }
@@ -291,6 +291,8 @@ namespace libCore
         if (ImGui::Button("Scale")) {
             currentOperation = ImGuizmo::OPERATION::SCALE;
         }
+
+        ImGui::DragFloat("Snap", &snappingGizmo, 0.01f);
         ImGui::End();
     }
 
@@ -318,8 +320,9 @@ namespace libCore
         float windowHeight = ImGui::GetIO().DisplaySize.y;
         ImGuizmo::SetRect(0, 0, windowWidth, windowHeight);
         glm::mat4 transformComp = EntityManager::GetInstance().m_registry.get<libCore::Transform>(entity).getMatrix();
+        float snap[3] = { snappingGizmo, snappingGizmo, snappingGizmo };
         ImGuizmo::Manipulate(glm::value_ptr(camera.view), glm::value_ptr(camera.projection),
-         currentOperation, ImGuizmo::WORLD, glm::value_ptr(transformComp));
+         currentOperation, ImGuizmo::WORLD, glm::value_ptr(transformComp), NULL, snap);
 
 
         if (transformComp != EntityManager::GetInstance().m_registry.get<libCore::Transform>(entity).getMatrix()) {
