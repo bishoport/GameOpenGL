@@ -1,26 +1,42 @@
 #include "Raycast.h"
 
-template <typename T> void Raycast::ProjectRay(Ref<libCore::Camera> camera)
+void Raycast::ProjectRay(libCore::Camera camera)
 {
-	//float normalizedX = (2.0f * InputManager::Instance().GetMousePosition().first) / camera->width - 1.0f;
-	//float normalizedY = 1.0f - (2.0f * InputManager::Instance().GetMousePosition().second) / camera->height;
-	//glm::vec3 clipSpaceCoordinates(normalizedX, normalizedY, 1.0);
+	
+	float normalizedX = (2.0f * InputManager::Instance().GetMousePosition().first) / camera.width - 1.0f;
+	float normalizedY = 1.0f - (2.0f * InputManager::Instance().GetMousePosition().second) / camera.height;
+	glm::vec3 clipSpaceCoordinates(normalizedX, normalizedY, 1.0);
 
-	//glm::vec4 homogenousCoordinates = glm::inverse(camera->cameraMatrix) * glm::vec4(clipSpaceCoordinates, 1.0);
-	//glm::vec3 worldCoordinates = glm::vec3(homogenousCoordinates / homogenousCoordinates.w);
+	glm::vec4 homogenousCoordinates = glm::inverse(camera.cameraMatrix) * glm::vec4(clipSpaceCoordinates, 1.0);
+	glm::vec3 worldCoordinates = glm::vec3(homogenousCoordinates / homogenousCoordinates.w);
 
 
-	////Preparamos el rayo para lanzarlo desde la camara hasta la posicion del mouse ya convertido al espacio 3D
-	//glm::vec3 rayOrigin = camera->Position;
-	//glm::vec3 rayDirection = glm::normalize(worldCoordinates - rayOrigin);
+	//Preparamos el rayo para lanzarlo desde la camara hasta la posicion del mouse ya convertido al espacio 3D
+	glm::vec3 rayOrigin = camera.Position;
+	glm::vec3 rayDirection = glm::normalize(worldCoordinates - rayOrigin);
 
-	////En esta variable se guardará el maximo valor que de un float (a modo de inicializador con valor "infinito") 
-	//float closestDistance = std::numeric_limits<float>::max();
-	////entt:entity[] entities = EntityManager::GetInstance().allTheEntities();
+	//En esta variable se guardará el maximo valor que de un float (a modo de inicializador con valor "infinito") 
+	float closestDistance = std::numeric_limits<float>::max();
+	entt::entity* entities = EntityManager::GetInstance().allTheEntities();
+	size_t arraySize = sizeof(entities) / sizeof(entities[0]);
 
-	//for (unsigned i = 0; i < entities.size(); i++) {
-	//	//if(rayCastIntersecting()
-	//}
+	/*for (size_t i = 0; i < arraySize; i++) {
+		entt::entity entt = entities[i];
+		if (entt != entt::null && EntityManager::GetInstance().m_registry.valid(entt)) {
+			if (EntityManager::GetInstance().m_registry.has<libCore::ColliderComponent>(entt)) {
+				libCore::ColliderComponent collider = EntityManager::GetInstance().m_registry.get<libCore::ColliderComponent>(entities[i]);
+				if (rayCastIntersecting(rayOrigin, rayDirection, collider.minBound, collider.maxBound)) {
+					std::cout << "This is working!!!!" << std::endl;
+				}
+			}
+		}
+		
+	}*/
+}
+
+void Raycast::MakePing()
+{
+	std::cout << "Make ping" << std::endl;
 }
 
 bool Raycast::rayCastIntersecting(const glm::vec3& rayOrigin, const glm::vec3& rayDirection, glm::vec3 boxMin, glm::vec3 boxMax)

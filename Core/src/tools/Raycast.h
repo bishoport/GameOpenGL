@@ -4,7 +4,11 @@
 class Raycast {
 
 public:
-	template <typename T> void ProjectRay(Ref<libCore::Camera> camera);
+	 void ProjectRay(libCore::Camera camera);
 
+	 void MakePing();
 	bool rayCastIntersecting(const glm::vec3& rayOrigin, const glm::vec3& rayDirection, glm::vec3 boxMin, glm::vec3 boxMax);
+	bool isValidPair(const std::pair<double, double>& p) {
+		return !std::isnan(p.first) && !std::isnan(p.second);
+	}
  };

@@ -8,6 +8,7 @@ entt::entity Scene::EntityCreator(Ref<libCore::ModelContainer> modelContainer, s
 	entt::entity entity = EntityManager::GetInstance().m_registry.create();
 	modelContainer->entityIdentifier = index;
 	EntityManager::GetInstance().m_registry.emplace<libCore::Transform>(entity);
+	EntityManager::GetInstance().m_registry.emplace<libCore::ColliderComponent>(entity);
 	EntityManager::GetInstance().m_registry.emplace<libCore::Renderer>(entity, modelContainer);
 	if (nameEntity.size() <= 0)
 		nameEntity = "ACTOR_" + std::to_string(index);

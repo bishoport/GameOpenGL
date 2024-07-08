@@ -4,7 +4,7 @@
 #include "GuiLayer.h"
 #include "ViewportManager.hpp"
 #include "../tools/RoofGenerator.hpp"
-
+#include "../tools/Raycast.h"
 namespace libCore
 {
 	//MANAGERS
@@ -225,6 +225,7 @@ namespace libCore
 
 		running = true;
 
+		Ref<Raycast> raycast;
 
 		//glEnable(GL_BLEND);
 		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -244,6 +245,11 @@ namespace libCore
 
 			//START INPUT UPDATE
 			InputManager::Instance().Update();
+
+			if (InputManager::Instance().IsMouseButtonJustPressed(0)) {
+				libCore::Camera camera = *viewportManager->viewports[0]->camera;
+				raycast->ProjectRay(camera);
+			}
 
 			//MAIN LOOP FUNCTION CALL
 			if (g_mainLoodFnc)

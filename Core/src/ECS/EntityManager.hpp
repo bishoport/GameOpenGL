@@ -6,6 +6,7 @@ class EntityManager : public Singleton<EntityManager> {
 
 public:
 	entt::registry m_registry;
+	std::vector<entt::entity> currentEntitiesList;
 
 	void GenerateEntity()
 	{
@@ -19,11 +20,30 @@ public:
 	}
 
 	entt::entity* allTheEntities() {
-		auto view = m_registry.view<>(); // Vista de todas las entidades
-		std::vector<entt::entity> entitesList;
-		for (auto entity : view) {
-			entitesList.push_back(entity);
+		//auto view = m_registry.view<>(entt::exclude<>); // Vista de todas las entidades
+		//std::vector<entt::entity> entitesList;
+		//for (auto entity : view) {
+		//	entitesList.push_back(entity);
+		//}
+		//if(entitesList.size() > 0)
+		//	return entitesList.data();
+		std::vector<entt::entity> entitiesList;
+		m_registry.each([&entitiesList](auto entity) {
+				//std::cout << "Value " << entity << std::endl;
+				entitiesList.push_back(entity);
+			});
+		if (currentEntitiesList.size() < entitiesList.size()) {
+
+			for (unsigned i = 0; i < entitiesList.size(); i++) {
+				auto it = std::find(currentEntitiesList.begin(), currentEntitiesList.end(), entitiesList[i]);
+				if (it != nullptr) {
+					currentEntitiesList.emplace_back(entitiesList[i]);
+				}
+			}
+
+			return currentEntitiesList.data();
 		}
-		return entitesList.data();
+		
+		return nullptr;
 	}
 };
