@@ -130,5 +130,55 @@ namespace libCore
     struct ColliderComponent {
         glm::vec3 maxBound;
         glm::vec3 minBound;
+
+        ColliderComponent() {
+
+        }
+
+        ColliderComponent(std::vector<glm::vec3> vectores) {
+            maxBound = obtainMax(vectores);
+            minBound = obtainMin(vectores);
+        }
+
+        glm::vec3 obtainMax(std::vector<glm::vec3> vectores) {
+            float x = (-std::numeric_limits<float>::max());
+            float y = (-std::numeric_limits<float>::max());
+            float z = (-std::numeric_limits<float>::max());
+
+            for (unsigned i = 0; i < vectores.size(); i++) {
+                if (x < vectores[i].x) {
+                    x = vectores[i].x;
+                }
+                if (y < vectores[i].y) {
+                    y = vectores[i].y;
+                }
+                if (z < vectores[i].z) {
+                    z = vectores[i].z;
+
+                }
+            }
+
+            return glm::vec3(x, y, z);
+        }
+
+        glm::vec3 obtainMin(std::vector<glm::vec3> vectores) {
+            float x = (std::numeric_limits<float>::max());
+            float y = (std::numeric_limits<float>::max());
+            float z = (std::numeric_limits<float>::max());
+
+            for (unsigned i = 0; i < vectores.size(); i++) {
+                if (x > vectores[i].x) {
+                    x = vectores[i].x;
+                }
+                if (y > vectores[i].y) {
+                    y = vectores[i].y;
+                }
+                if (z > vectores[i].z) {
+                    z = vectores[i].z;
+                }
+            }
+
+            return glm::vec3(x, y, z);
+        }
     };
 }

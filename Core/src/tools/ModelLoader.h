@@ -33,6 +33,7 @@ namespace libCore
 		bool skeletal = false;
 		bool isBoundingBox;
 		bool isDontDraw;
+		std::vector<glm::vec3> maxMinBound;
 		void Draw(const std::string& shader)
 		{
 			for (auto& model : models)

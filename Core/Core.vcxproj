@@ -258,7 +258,7 @@
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)vendor\earcut\include;$(ProjectDir)vendor;$(ProjectDir)vendor\imgui;$(ProjectDir)vendor\freetype-2.13.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)vendor\earcut\include;$(ProjectDir)vendor;$(ProjectDir)vendor\imgui;$(ProjectDir)vendor\freetype-2.13.2\include;C:\Users\migue\Desktop\Projects\Bullet\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>

@@ -44,6 +44,6 @@ public:
 			return currentEntitiesList.data();
 		}
 		
-		return nullptr;
+		return currentEntitiesList.data();
 	}
 };

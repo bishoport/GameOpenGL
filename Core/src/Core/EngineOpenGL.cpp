@@ -601,7 +601,9 @@ namespace libCore
 		Ref<Mesh> mesh = PrimitivesHelper::CreateDot();
 		modelBuild->meshes.push_back(mesh);
 
-		modelBuild->meshes.push_back(PrimitivesHelper::CreateBoundingBox(maxMinBounds(convertVertexToVector(mesh->vertices), modelBuild->transform.getMatrix())));
+		std::vector<glm::vec3> maxMin = maxMinBounds(convertVertexToVector(mesh->vertices), modelBuild->transform.getMatrix());
+
+		modelBuild->meshes.push_back(PrimitivesHelper::CreateBoundingBox(maxMin));
 		//--DEFAULT_MATERIAL
 		auto material = CreateRef<Material>();
 		material->materialName = "default_material";
@@ -666,7 +668,11 @@ namespace libCore
 		Ref<Mesh> mesh = PrimitivesHelper::CreateSphere(0.01f, 6, 6);
 
 		modelBuild->meshes.push_back(mesh);
-		modelBuild->meshes.push_back(PrimitivesHelper::CreateBoundingBox(maxMinBounds(convertVertexToVector(mesh->vertices), modelBuild->transform.getMatrix())));
+
+		modelContainer->maxMinBound = maxMinBounds(convertVertexToVector(mesh->vertices), modelBuild->transform.getMatrix());
+
+		modelBuild->meshes.push_back(PrimitivesHelper::CreateBoundingBox(modelContainer->maxMinBound));
+
 
 		modelContainer->models.push_back(modelBuild);
 
@@ -702,7 +708,9 @@ namespace libCore
 		Ref<Mesh> mesh = PrimitivesHelper::CreateCube();
 
 		modelBuild->meshes.push_back(mesh);
-		modelBuild->meshes.push_back(PrimitivesHelper::CreateBoundingBox(maxMinBounds(convertVertexToVector(mesh->vertices), modelBuild->transform.getMatrix())));
+		modelContainer->maxMinBound = maxMinBounds(convertVertexToVector(mesh->vertices), modelBuild->transform.getMatrix());
+
+		modelBuild->meshes.push_back(PrimitivesHelper::CreateBoundingBox(modelContainer->maxMinBound));
 
 
 		//--DEFAULT_MATERIAL

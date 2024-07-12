@@ -20,7 +20,10 @@ void Raycast::ProjectRay(libCore::Camera camera)
 	entt::entity* entities = EntityManager::GetInstance().allTheEntities();
 	size_t arraySize = sizeof(entities) / sizeof(entities[0]);
 
-	/*for (size_t i = 0; i < arraySize; i++) {
+	for (size_t i = 0; i < arraySize; i++) {
+		if (&entities[i] == nullptr)
+			continue;
+
 		entt::entity entt = entities[i];
 		if (entt != entt::null && EntityManager::GetInstance().m_registry.valid(entt)) {
 			if (EntityManager::GetInstance().m_registry.has<libCore::ColliderComponent>(entt)) {
@@ -31,7 +34,7 @@ void Raycast::ProjectRay(libCore::Camera camera)
 			}
 		}
 		
-	}*/
+	}
 }
 
 void Raycast::MakePing()
