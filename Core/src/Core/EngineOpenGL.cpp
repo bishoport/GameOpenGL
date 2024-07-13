@@ -15,6 +15,8 @@ namespace libCore
 	Ref<Skeleton> current_sk;
 	RoofData current_roofData;
 
+	entt::entity selectedEntity;
+
 	void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	{
 		EventManager::OnWindowResizeEvent().trigger(width, height);
@@ -248,7 +250,7 @@ namespace libCore
 
 			if (InputManager::Instance().IsMouseButtonJustPressed(0)) {
 				libCore::Camera camera = *viewportManager->viewports[0]->camera;
-				raycast->ProjectRay(camera);
+				selectedEntity = raycast->ProjectRay(camera);
 			}
 
 			//MAIN LOOP FUNCTION CALL
@@ -757,7 +759,7 @@ namespace libCore
 		{
 			guiLayer->DrawHierarchyPanel(Scene::GetInstance().modelsInScene);
 			guiLayer->GizmosBasicButtons(viewportManager->viewports[0]->viewportSize.x, viewportManager->viewports[0]->viewportSize.y);
-			guiLayer->SelectCurrentGizmoObject(Scene::GetInstance().modelsInScene, *viewportManager->viewports[0]->camera);
+			guiLayer->SelectCurrentGizmoObject(Scene::GetInstance().modelsInScene, *viewportManager->viewports[0]->camera, selectedEntity);
 			guiLayer->DrawLightsPanel(lights);
 			//guiLayer->RenderCheckerMatrix(); //Panel para el editor de roofs
 		}

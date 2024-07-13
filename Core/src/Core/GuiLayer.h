@@ -39,7 +39,7 @@ namespace libCore
 		//Panels
 		void DrawHierarchyPanel(const std::vector<Ref<libCore::ModelContainer>>& modelsInScene);
         void GizmosBasicButtons(float width, float height);
-        void SelectCurrentGizmoObject(const std::vector<Ref<libCore::ModelContainer>>& modelsInScene, libCore::Camera camera);
+        void SelectCurrentGizmoObject(const std::vector<Ref<libCore::ModelContainer>>& modelsInScene, libCore::Camera camera, entt::entity entt);
         void DrawGizmos(entt::entity& entity, libCore::Camera camera, Ref<libCore::ModelContainer> modelContainer);
         void DrawLightsPanel(const std::vector<Ref<libCore::Light>>& lightsInScene);
 

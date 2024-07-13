@@ -1,6 +1,6 @@
 #include "Raycast.h"
 
-void Raycast::ProjectRay(libCore::Camera camera)
+entt::entity Raycast::ProjectRay(libCore::Camera camera)
 {
 	
 	float normalizedX = (2.0f * InputManager::Instance().GetMousePosition().first) / camera.width - 1.0f;
@@ -28,13 +28,18 @@ void Raycast::ProjectRay(libCore::Camera camera)
 		if (entt != entt::null && EntityManager::GetInstance().m_registry.valid(entt)) {
 			if (EntityManager::GetInstance().m_registry.has<libCore::ColliderComponent>(entt)) {
 				libCore::ColliderComponent collider = EntityManager::GetInstance().m_registry.get<libCore::ColliderComponent>(entities[i]);
-				if (rayCastIntersecting(rayOrigin, rayDirection, collider.minBound, collider.maxBound)) {
-					std::cout << "This is working!!!!" << std::endl;
+				libCore::Transform transform = EntityManager::GetInstance().m_registry.get<libCore::Transform>(entities[i]);
+				glm::vec3 gap = collider.maxBound - transform.position;
+				glm::vec3 minBound = transform.position - gap;
+				glm::vec3 maxBound = transform.position + gap;
+				if (rayCastIntersecting(rayOrigin, rayDirection, minBound, maxBound)) {
+					return entt;
 				}
 			}
 		}
 		
 	}
+	return entt::null;
 }
 
 void Raycast::MakePing()

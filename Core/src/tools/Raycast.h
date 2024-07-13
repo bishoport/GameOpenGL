@@ -4,7 +4,7 @@
 class Raycast {
 
 public:
-	 void ProjectRay(libCore::Camera camera);
+	entt::entity ProjectRay(libCore::Camera camera);
 
 	 void MakePing();
 	bool rayCastIntersecting(const glm::vec3& rayOrigin, const glm::vec3& rayDirection, glm::vec3 boxMin, glm::vec3 boxMax);

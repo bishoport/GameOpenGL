@@ -41,6 +41,7 @@
     <ClInclude Include="src\ECS\EntityManager.hpp" />
     <ClInclude Include="src\ECS\Scene.h" />
     <ClInclude Include="src\ECS\Singleton.h" />
+    <ClInclude Include="src\ECS\Systems\RenderSystem.h" />
     <ClInclude Include="src\input\InputManager.h" />
     <ClInclude Include="src\input\KeyCodes.h" />
     <ClInclude Include="src\input\MouseButtonCodes.h" />
@@ -112,6 +113,7 @@
     <ClCompile Include="src\Core\VBO.cpp" />
     <ClCompile Include="src\Core\GuiLayer.cpp" />
     <ClCompile Include="src\ECS\Scene.cpp" />
+    <ClCompile Include="src\ECS\Systems\RenderSystem.cpp" />
     <ClCompile Include="src\input\InputManager.cpp" />
     <ClCompile Include="src\StraightSkeleton\CircularList.cpp" />
     <ClCompile Include="src\StraightSkeleton\CircularNode.cpp" />

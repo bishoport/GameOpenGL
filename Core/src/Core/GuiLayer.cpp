@@ -296,16 +296,18 @@ namespace libCore
         ImGui::End();
     }
 
-    void GuiLayer::SelectCurrentGizmoObject(const std::vector<Ref<libCore::ModelContainer>>& modelsInScene, libCore::Camera camera)
+    void GuiLayer::SelectCurrentGizmoObject(const std::vector<Ref<libCore::ModelContainer>>& modelsInScene, libCore::Camera camera, entt::entity entt)
     {
+        if (&entt == nullptr)
+            return;
         for (auto& modelContainer : modelsInScene) {
 
             entt::entity newEntity = Scene::GetInstance().entitiesDictionary[modelContainer->entityIdentifier];
             std::string nameEntity = EntityManager::GetInstance().m_registry.get<libCore::EntityInfo>(newEntity).name;
-            if (EntityManager::GetInstance().m_registry.has<Transform>(newEntity)) {
-                if (nameEntity == "Guts") {
-                    DrawGizmos(newEntity, camera, modelContainer);
-                }
+            if (EntityManager::GetInstance().m_registry.has<Transform>(newEntity) && newEntity == entt) {
+               
+                DrawGizmos(entt, camera, modelContainer);
+                
             }
            
         }
