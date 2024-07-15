@@ -40,6 +40,10 @@ void Scene::BeginPlay()
 	//EntityCreator(libCore::EngineOpenGL::GetInstance().CreatePrefabCube(), "Bounding Box");
 	CreateTagsAndLayers();
 	CreateCube();
+	CreateCube();
+
+	CreateCube();
+
 	CreateSphere(100, 100, 100);
 }
 
@@ -51,7 +55,9 @@ void Scene::Tick(float DeltaTime)
 
 void Scene::CreateCube()
 {
-	EntityCreator(libCore::EngineOpenGL::GetInstance().CreatePrefabCube(), "Guts");
+	EntityCreator(libCore::EngineOpenGL::GetInstance().CreatePrefabCube(), "Uno");
+	EntityCreator(libCore::EngineOpenGL::GetInstance().CreatePrefabCube(), "Dos");
+
 }
 
 void Scene::CreateSphere(float radius, unsigned int sectorCount, unsigned int stackCount)

@@ -18,8 +18,11 @@ entt::entity Raycast::ProjectRay(libCore::Camera camera)
 	//En esta variable se guardará el maximo valor que de un float (a modo de inicializador con valor "infinito") 
 	float closestDistance = std::numeric_limits<float>::max();
 	entt::entity* entities = EntityManager::GetInstance().allTheEntities();
-	size_t arraySize = sizeof(entities) / sizeof(entities[0]);
+	unsigned entity = sizeof(entt::entity);
+	unsigned entitySize = sizeof(entities);
 
+	size_t arraySize = entitySize - 1;
+	entt::entity selectedEntity = entt::null;
 	for (size_t i = 0; i < arraySize; i++) {
 		if (&entities[i] == nullptr)
 			continue;
@@ -32,13 +35,18 @@ entt::entity Raycast::ProjectRay(libCore::Camera camera)
 				glm::vec3 gap = collider.maxBound - transform.position;
 				glm::vec3 minBound = transform.position - gap;
 				glm::vec3 maxBound = transform.position + gap;
-				if (rayCastIntersecting(rayOrigin, rayDirection, minBound, maxBound)) {
-					return entt;
+				if (rayCastIntersecting(rayOrigin, rayDirection, 
+					minBound - transform.position,
+					maxBound + transform.position)) {
+					selectedEntity = entt;
+					std::cout << "Selected entity " << i << std::endl;
 				}
 			}
 		}
 		
 	}
+	if(selectedEntity != entt::null)
+		return selectedEntity;
 	return entt::null;
 }
 
