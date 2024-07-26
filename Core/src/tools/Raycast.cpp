@@ -33,8 +33,8 @@ entt::entity Raycast::ProjectRay(libCore::Camera camera)
 				libCore::ColliderComponent collider = EntityManager::GetInstance().m_registry.get<libCore::ColliderComponent>(entities[i]);
 				libCore::Transform transform = EntityManager::GetInstance().m_registry.get<libCore::Transform>(entities[i]);
 				glm::vec3 gap = collider.maxBound - transform.position;
-				glm::vec3 minBound = transform.position - gap;
-				glm::vec3 maxBound = transform.position + gap;
+				glm::vec3 minBound = (transform.position - gap) * transform.scale;
+				glm::vec3 maxBound = (transform.position + gap) * transform.scale;
 				if (rayCastIntersecting(rayOrigin, rayDirection, 
 					minBound - transform.position,
 					maxBound + transform.position)) {
